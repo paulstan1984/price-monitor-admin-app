@@ -23,13 +23,15 @@ export class AuthServiceService {
     localStorage.removeItem(environment.PriceMonitorToken);
   }
 
-  login(password: string) {
+  login(password: string, errorHandler: (error: HttpErrorResponse) => void) {
 
     this.http
       .post(environment.ApiURL + 'login', { Password: password })
-      .pipe(catchError((error: HttpErrorResponse, caught: Observable<any>) => {
-          //errorHandler(error);
+      .pipe(
+        catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+          errorHandler(error);
           return caught;
-      }));;
+        })
+      );
   }
 }

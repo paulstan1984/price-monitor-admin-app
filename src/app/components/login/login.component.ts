@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthServiceService } from 'src/app/services/AuthService.service';
 import { BaseComponent } from '../BaseComponent';
 
 @Component({
@@ -9,11 +10,15 @@ import { BaseComponent } from '../BaseComponent';
 export class LoginComponent extends BaseComponent implements OnInit {
 
   year: number = 0;
+  public password: string = '';
 
-  constructor() { super(); }
+  constructor(private authService: AuthServiceService) { super(); }
 
   ngOnInit() {
     this.year = new Date().getFullYear();
   }
 
+  DoLogin(){
+    this.authService.login(this.password, this.errorHandler);
+  }
 }
