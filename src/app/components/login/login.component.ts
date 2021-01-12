@@ -10,7 +10,7 @@ import { BaseComponent } from '../BaseComponent';
 export class LoginComponent extends BaseComponent implements OnInit {
 
   year: number = 0;
-  public password: string = '';
+  public password: string = '123';
 
   constructor(private authService: AuthServiceService) { super(); }
 
