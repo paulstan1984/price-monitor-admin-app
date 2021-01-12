@@ -23,9 +23,9 @@ export class AuthServiceService {
     localStorage.removeItem(environment.PriceMonitorToken);
   }
 
-  login(password: string, errorHandler: (error: HttpErrorResponse) => void) {
+  login(password: string, errorHandler: (error: HttpErrorResponse) => void): Observable<LoginResponse> {
 
-    this.http
+    return this.http
       .post(environment.ApiURL + 'login', { Password: password })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<any>) => {
@@ -34,4 +34,13 @@ export class AuthServiceService {
         })
       );
   }
+
+  setToken(token: string){
+    localStorage.setItem(environment.PriceMonitorToken, token);
+  }
+}
+
+
+export interface LoginResponse {
+  token: string;
 }

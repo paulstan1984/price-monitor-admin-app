@@ -1,5 +1,5 @@
 <main class="form-signin">
-  <form action="#" method="post" role="form" #f="ngForm">
+  <form action="#" method="post" role="form" #f="ngForm" (ngSubmit)="DoLogin(f)">
     <h1 class="h3 mb-3 fw-normal"><i class="fas fa-user"></i> Please sign in</h1>
     <label for="inputPassword" class="visually-hidden">Password</label>
     <input name="password" type="password" class="form-control" placeholder="Password" required [(ngModel)]="password">
