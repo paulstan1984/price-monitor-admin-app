@@ -24,17 +24,18 @@ export class LoginComponent extends BaseComponent implements OnInit {
     this.year = new Date().getFullYear();
   }
 
-  public DoLogin(f: NgForm){
+  public DoLogin(f: NgForm) {
 
-    if(!this.validateForm(f)){
+    if (!this.validateForm(f)) {
       return;
     }
 
     this.authService
-    .login(this.password, this.errorHandler)
-    .subscribe(response => {
-      this.authService.setToken(response.token);
-      this.router.navigate([environment.DashboardRoute]);
-    })
+      .login(this.password, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(response => {
+        this.setLoading(false);
+        this.authService.setToken(response.token);
+        this.router.navigate([environment.DashboardRoute]);
+      })
   }
 }
