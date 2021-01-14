@@ -2,15 +2,35 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { NgForm } from "@angular/forms";
 
+export interface ErrorObject{ 
+  GlobalMessage: string;
+  DetailedMessages: Map<string, string>;
+}
 
 @Injectable()
 export class BaseComponent {
 
   loading: boolean = false;
+  errorObj: ErrorObject = {
+    GlobalMessage: '',
+    DetailedMessages : new Map<string, string>()
+  } as ErrorObject;
 
   errorHandler(error: HttpErrorResponse) {
-    this.setLoading(false);
-    console.error(error);
+    switch (error.status) {
+
+      case 400:
+        break;
+
+      case 404:
+        break;
+
+      case 500:
+      default:
+        console.log(error.message);
+        this.errorObj.GlobalMessage = error.message;
+        break;
+    }
     throw error;
   }
 
