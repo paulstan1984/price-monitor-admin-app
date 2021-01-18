@@ -7,8 +7,8 @@ import { BaseComponent } from "./BaseComponent";
 export class LoggedInComponent extends BaseComponent implements OnInit {
 
     constructor(
-        private authService: AuthServiceService,
-        private router: Router
+        protected authService: AuthServiceService,
+        protected router: Router
     ) {
         super();
     }

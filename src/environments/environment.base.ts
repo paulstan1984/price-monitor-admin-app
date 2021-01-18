@@ -4,5 +4,6 @@ export const base_environment = {
 
     ApiURL: 'http://localhost/price-monitor/api/public/',
 
-    DashboardRoute: 'dashboard'
+    DashboardRoute: 'dashboard',
+    LoginRoute: 'login'
 };

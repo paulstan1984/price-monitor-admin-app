@@ -10,4 +10,9 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     top: 0px;
     left: 0px;
     background-color: rgb(200, 200, 200, 0.5);
+    z-index: 9999;
+}
+
+.form-control.ng-dirty.ng-invalid {
+    background-color: #f8d7da;
 }

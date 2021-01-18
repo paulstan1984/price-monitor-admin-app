@@ -4,7 +4,7 @@ import { NgForm } from "@angular/forms";
 
 export interface ErrorObject{ 
   GlobalMessage: string;
-  DetailedMessages: Map<string, string>;
+  DetailedMessages: any;
 }
 
 @Injectable()
@@ -13,21 +13,21 @@ export class BaseComponent {
   loading: boolean = false;
   errorObj: ErrorObject = {
     GlobalMessage: '',
-    DetailedMessages : new Map<string, string>()
+    DetailedMessages: {}
   } as ErrorObject;
 
   errorHandler(error: HttpErrorResponse) {
     switch (error.status) {
 
       case 400:
-        break;
-
       case 404:
+          for (const field in error.error) {
+          this.errorObj.DetailedMessages[field] = error.error[field];
+        }  
         break;
 
       case 500:
       default:
-        console.log(error.message);
         this.errorObj.GlobalMessage = error.message;
         break;
     }
@@ -40,6 +40,9 @@ export class BaseComponent {
     for (const key in f.controls) {
       if (f.controls.hasOwnProperty(key)) {
         valid = valid && f.controls[key].valid;
+        if(!f.controls[key].valid) {
+          f.controls[key].markAsDirty();
+        }
       }
     }
 
@@ -48,5 +51,12 @@ export class BaseComponent {
 
   setLoading(loading: boolean) {
     this.loading = loading;
+
+    if(loading){
+      this.errorObj = {
+        GlobalMessage: '',
+        DetailedMessages: {}
+      } as ErrorObject;
+    }
   }
 }

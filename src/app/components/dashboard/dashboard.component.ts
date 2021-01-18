@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthServiceService } from 'src/app/services/AuthService.service';
+import { environment } from 'src/environments/environment';
 import { LoggedInComponent } from '../LoggedInComponent';
 
 @Component({
@@ -17,4 +18,8 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
     super(authService, router);
   }
 
+  DoLogout(){
+    this.authService.logout();
+    this.router.navigate([environment.LoginRoute])
+  }
 }
