@@ -2,7 +2,7 @@ import { HttpErrorResponse } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { NgForm } from "@angular/forms";
 
-export interface ErrorObject{ 
+export interface ErrorObject {
   GlobalMessage: string;
   DetailedMessages: any;
 }
@@ -23,9 +23,9 @@ export class BaseComponent {
 
       case 400:
       case 404:
-          for (const field in error.error) {
+        for (const field in error.error) {
           this.errorObj.DetailedMessages[field] = error.error[field];
-        }  
+        }
         break;
 
       case 500:
@@ -42,7 +42,7 @@ export class BaseComponent {
     for (const key in f.controls) {
       if (f.controls.hasOwnProperty(key)) {
         valid = valid && f.controls[key].valid;
-        if(!f.controls[key].valid) {
+        if (!f.controls[key].valid) {
           f.controls[key].markAsDirty();
         }
       }
@@ -54,7 +54,7 @@ export class BaseComponent {
   setLoading(loading: boolean) {
     this.loading = loading;
 
-    if(loading){
+    if (loading) {
       this.errorObj = {
         GlobalMessage: '',
         DetailedMessages: {}
