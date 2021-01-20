@@ -14,7 +14,6 @@ import { LoggedInComponent } from '../LoggedInComponent';
 export class DashboardComponent extends LoggedInComponent implements OnInit {
 
   public stores: Store[] = [];
-  public newStore: Store | undefined = undefined;
   public backupStore: Store | undefined = undefined;
 
   constructor(
@@ -48,17 +47,28 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
   }
 
   NewStore() {
-    this.newStore = { InEdit: true } as Store;
+    this.stores.map(s => this.Unedit(s));
+
+    let newStore = { InEdit: true } as Store;
+    this.backupStore = Object.assign({}, newStore);
+    this.stores.push(newStore);
+  }
+
+  protected Unedit(s: Store){
+    if (s.InEdit) {
+      Object.assign(s, this.backupStore!);
+    }
+
+    if (!s.id) {
+      this.stores.splice(-1, 1);
+    }
+
+    s.InEdit = false;
   }
 
   EditStore(store: Store, editable: boolean) {
 
-    this.stores.map(s => {
-      if (s.InEdit) {
-        Object.assign(s, this.backupStore!);
-      }
-      s.InEdit = false;
-    });
+    this.stores.map(s => this.Unedit(s));
 
     if (editable) {
       this.backupStore = Object.assign({}, store);
@@ -77,9 +87,11 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
   }
 
   DeleteStore(store: Store) {
-    this.storesService.delete(store, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(() => {
-        this.loadStores();
-      })
+    if (confirm('Confirmați ștergerea?')) {
+      this.storesService.delete(store, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+        .subscribe(() => {
+          this.loadStores();
+        });
+    }
   }
 }
