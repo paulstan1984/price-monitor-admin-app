@@ -15,6 +15,7 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
 
   public stores: Store[] = [];
   public newStore: Store | undefined = undefined;
+  public backupStore: Store | undefined = undefined;
 
   constructor(
     authService: AuthService,
@@ -51,9 +52,20 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
   }
 
   EditStore(store: Store, editable: boolean) {
+
+    this.stores.map(s => {
+      if (s.InEdit) {
+        Object.assign(s, this.backupStore!);
+      }
+      s.InEdit = false;
+    });
+
     if (editable) {
-      this.stores.map(s => s.InEdit = false);
+      this.backupStore = Object.assign({}, store);
+    } else {
+      this.backupStore = undefined;
     }
+
     store.InEdit = editable;
   }
 

@@ -51,7 +51,9 @@
                   {{store.name}}
                 </ng-container>
 
-                <input *ngIf="store.InEdit" name="name" [(ngModel)]="store.name" (keyup.enter)="DoSave(store)" />
+                <input *ngIf="store.InEdit" name="name" 
+                [(ngModel)]="store.name" 
+                (keyup.enter)="DoSave(store)" (keyup.escape)="EditStore(store, false)" (blur)="EditStore(store, false)"/>
 
                 <div *ngIf="store.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
                   class="alert alert-danger m-0 p-2">
