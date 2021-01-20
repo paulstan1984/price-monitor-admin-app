@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthServiceService {
+export class AuthService {
 
   constructor(private http: HttpClient) { }
 
@@ -38,8 +38,12 @@ export class AuthServiceService {
       );
   }
 
-  setToken(token: string){
+  setToken(token: string) {
     localStorage.setItem(environment.PriceMonitorToken, token);
+  }
+
+  public getToken(): string | null {
+    return localStorage.getItem(environment.PriceMonitorToken);
   }
 }
 

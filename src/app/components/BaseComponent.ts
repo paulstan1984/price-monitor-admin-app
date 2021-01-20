@@ -16,6 +16,8 @@ export class BaseComponent {
     DetailedMessages: {}
   } as ErrorObject;
 
+  dateTimeFormal = 'YYYY-MM-dd HH:mm:ss';
+
   errorHandler(error: HttpErrorResponse) {
     switch (error.status) {
 

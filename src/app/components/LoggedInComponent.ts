@@ -1,13 +1,13 @@
 import { Injectable, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-import { AuthServiceService } from "../services/AuthService.service";
+import { AuthService } from "../services/Auth.service";
 import { BaseComponent } from "./BaseComponent";
 
 @Injectable()
 export class LoggedInComponent extends BaseComponent implements OnInit {
 
     constructor(
-        protected authService: AuthServiceService,
+        protected authService: AuthService,
         protected router: Router
     ) {
         super();

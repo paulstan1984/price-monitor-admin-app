@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthServiceService } from 'src/app/services/AuthService.service';
+import { AuthService } from 'src/app/services/Auth.service';
 import { environment } from 'src/environments/environment';
 import { BaseComponent } from '../BaseComponent';
 
@@ -16,7 +16,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
   password: string = '';
 
   constructor(
-    private authService: AuthServiceService,
+    private authService: AuthService,
     private router: Router
   ) { super(); }
 
