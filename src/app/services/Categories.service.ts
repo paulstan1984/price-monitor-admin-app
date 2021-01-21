@@ -11,6 +11,8 @@ import { ServiceBase } from './ServiceBase';
 })
 export class CategoriesService extends ServiceBase {
 
+  private ApiURL = environment.ApiURL + 'categories';
+
   constructor(http: HttpClient) { super (http); }
 
   public list(startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<Category[]> {
@@ -18,7 +20,7 @@ export class CategoriesService extends ServiceBase {
     startCallback();
 
     return this.http
-      .get<Category[]>(environment.ApiURL + 'categories',  { headers: this.headers })
+      .get<Category[]>(this.ApiURL,  { headers: this.headers })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<Category[]>) => {
           endCallback();
@@ -32,7 +34,7 @@ export class CategoriesService extends ServiceBase {
 
     startCallback();
 
-    let url = environment.ApiURL + 'categories';
+    let url = this.ApiURL;
     if(Category!.id > 0){
       url += ('/' + Category.id);
     }
@@ -52,7 +54,7 @@ export class CategoriesService extends ServiceBase {
 
     startCallback();
 
-    let url = environment.ApiURL + 'Categorys/' + categ.id;
+    let url = this.ApiURL + '/' + categ.id;
     
     return this.http
       .delete(url,  { headers: this.headers })

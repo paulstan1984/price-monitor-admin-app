@@ -97,12 +97,38 @@
         </div>
       </div>
 
-      <div class="card" style="width: 18rem;" *ngFor="let categ of categories!">
-        <div class="card-body">
-          <h5 class="card-title">{{categ.name}}</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's
-            content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
+      <div class="row">
+        <div class="col-md-6 col-lg-3" *ngFor="let categ of categories!">
+          <div class="card">
+            <div class="card-body">
+              <h5 class="card-title">
+                <ng-container *ngIf="!categ.InEdit">
+                  {{categ.name}}
+                </ng-container>
+
+                <input *ngIf="categ.InEdit" name="name" [(ngModel)]="categ.name" (keyup.enter)="SaveCategory(categ)"
+                  (keyup.escape)="EditCategory(categ, false)" />
+
+                <div *ngIf="categ.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
+                  class="alert alert-danger m-0 p-2">
+                  {{errorObj.DetailedMessages['name']}}
+                </div>
+              </h5>
+              <p class="card-text" *ngIf="categ!.id>0">
+                Created: {{categ.created_at | date : dateTimeFormal}}<br />
+                Updated: {{categ.updated_at | date : dateTimeFormal}}
+              </p>
+
+              <button type="button" *ngIf="!categ.InEdit" class="mr-2 btn btn-sm btn-secondary"
+                (click)="EditCategory(categ, true)"><i class="fas fa-edit"></i></button>
+              <button type="button" *ngIf="categ.InEdit" class="mr-2 btn btn-sm btn-success"
+                (click)="SaveCategory(categ)"><i class="fas fa-save"></i></button>
+              <button type="button" *ngIf="categ.InEdit" class="mr-2 btn btn-sm btn-info"
+                (click)="EditCategory(categ, false)"><i class="fas fa-undo"></i></button>
+              <button type="button" *ngIf="!categ.InEdit" class="mr-2 btn btn-sm btn-danger"
+                (click)="DeleteCategory(categ)"><i class="fas fa-trash-alt"></i></button>
+            </div>
+          </div>
         </div>
       </div>
 
