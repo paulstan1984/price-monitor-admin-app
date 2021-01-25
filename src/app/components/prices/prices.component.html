@@ -1,3 +1,115 @@
-<p>
-  prices works!
-</p>
+<app-header></app-header>
+
+<div class="container-fluid">
+  <div class="row">
+    <app-menu></app-menu>
+
+    <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <!--Prices-->
+
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+        <h2>Prices</h2>
+        <div class="btn-toolbar mb-2 mb-md-0">
+          <div class="btn-group mr-2">
+            <button class="btn btn-sm btn-primary" (click)="NewPrice()"><i class="fa fa-plus" aria-hidden="true"></i>
+              New</button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="errorObj && errorObj.GlobalMessage" class="alert alert-danger alert-dismissible">
+        <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+        {{errorObj.GlobalMessage}}
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>Product</th>
+              <th>Store</th>
+              <th>Amount</th>
+              <th>Created</th>
+              <th>Updated</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody *ngIf="prices!.length > 0">
+            <tr *ngFor="let price of prices">
+              <td>{{price.id}}</td>
+              <td>
+                <ng-container *ngIf="!price.InEdit">
+                  {{price.product?.name}}
+                </ng-container>
+
+                <select class="form-control" *ngIf="price.InEdit" name="product_id" [(ngModel)]="price.product_id" (keyup.enter)="SavePrice(price)"
+                (keyup.escape)="EditPrice(price, false)">
+                  <option *ngFor="let prod of products" [value]="prod.id">{{prod.name}}</option>
+                </select>
+
+                <div *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['product_id']"
+                  class="alert alert-danger m-0 p-2">
+                  {{errorObj.DetailedMessages['product_id']}}
+                </div>
+              </td>
+              <td>
+                <ng-container *ngIf="!price.InEdit">
+                  {{price.store?.name}}
+                </ng-container>
+
+                <select class="form-control" *ngIf="price.InEdit" name="store_id" [(ngModel)]="price.store_id" (keyup.enter)="SavePrice(price)"
+                (keyup.escape)="EditPrice(price, false)">
+                  <option *ngFor="let store of stores" [value]="store.id">{{store.name}}</option>
+                </select>
+
+                <div *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['store_id']"
+                  class="alert alert-danger m-0 p-2">
+                  {{errorObj.DetailedMessages['store_id']}}
+                </div>
+              </td>
+              <td>
+                <ng-container *ngIf="!price.InEdit">
+                  {{price.amount}} 
+                </ng-container>
+
+                <input class="form-control" *ngIf="price.InEdit" name="amount" [(ngModel)]="price.amount" (keyup.enter)="SavePrice(price)"
+                  (keyup.escape)="EditPrice(price, false)" type="number"/>
+
+                <div *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['amount']"
+                  class="alert alert-danger m-0 p-2">
+                  {{errorObj.DetailedMessages['amount']}}
+                </div>
+              </td>
+
+              <td>{{price.created_at | date : dateTimeFormal}} </td>
+              <td>{{price.updated_at | date : dateTimeFormal}}</td>
+              <td>
+                <button type="button" *ngIf="!price.InEdit" class="mr-2 btn btn-sm btn-secondary"
+                  (click)="EditPrice(price, true)"><i class="fas fa-edit"></i></button>
+                <button type="button" *ngIf="price.InEdit" class="mr-2 btn btn-sm btn-success"
+                  (click)="SavePrice(price)"><i class="fas fa-save"></i></button>
+                <button type="button" *ngIf="price.InEdit" class="mr-2 btn btn-sm btn-info"
+                  (click)="EditPrice(price, false)"><i class="fas fa-undo"></i></button>
+                <button type="button" *ngIf="!price.InEdit" class="mr-2 btn btn-sm btn-danger"
+                  (click)="DeletePrice(price)"><i class="fas fa-trash-alt"></i></button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="!loading && prices!.length == 0" class="alert alert-danger alert-dismissible">
+        No data.
+      </div>
+      
+    </main>
+  </div>
+</div>
+
+<div *ngIf="loading" class="loader-container">
+  <div class="row d-flex justify-content-center mt-3">
+    <mat-spinner></mat-spinner>
+  </div>
+</div>
