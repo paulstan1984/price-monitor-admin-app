@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { Category } from 'src/app/models/Category';
 import { Product } from 'src/app/models/Product';
 import { AuthService } from 'src/app/services/Auth.service';
+import { CategoriesService } from 'src/app/services/Categories.service';
 import { ProductsService } from 'src/app/services/Products.service';
 import { environment } from 'src/environments/environment';
 import { LoggedInComponent } from '../LoggedInComponent';
@@ -15,15 +17,18 @@ export class ProductsComponent extends LoggedInComponent implements OnInit {
 
   public products: Product[] = [];
   public backupProduct: Product | undefined = undefined;
+  public categories: Category[] = [];
 
   constructor(
     authService: AuthService,
     router: Router,
-    private productsService: ProductsService
+    private productsService: ProductsService,
+    private categoriesService: CategoriesService
   ) {
     super(authService, router);
 
     this.productsService.setAuthToken(this.authService.getToken());
+    this.categoriesService.setAuthToken(this.authService.getToken());
   }
 
   DoLogout() {
@@ -35,6 +40,16 @@ export class ProductsComponent extends LoggedInComponent implements OnInit {
     super.ngOnInit();
 
     this.loadProducts();
+    this.loadCategories();
+  }
+
+  loadCategories() {
+    this.categoriesService
+      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(categories => {
+        this.setLoading(false);
+        this.categories = categories;
+      })
   }
 
   //#region products

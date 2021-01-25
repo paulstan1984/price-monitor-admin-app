@@ -46,7 +46,7 @@
                   {{product.name}}
                 </ng-container>
 
-                <input *ngIf="product.InEdit" name="name" [(ngModel)]="product.name" (keyup.enter)="SaveProduct(product)"
+                <input class="form-control" *ngIf="product.InEdit" name="name" [(ngModel)]="product.name" (keyup.enter)="SaveProduct(product)"
                   (keyup.escape)="EditProduct(product, false)" />
 
                 <div *ngIf="product.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
@@ -54,7 +54,21 @@
                   {{errorObj.DetailedMessages['name']}}
                 </div>
               </td>
-              <td>{{product.category?.name}} </td>
+              <td>
+                <ng-container *ngIf="!product.InEdit">
+                  {{product.category?.name}}
+                </ng-container>
+
+                <select class="form-control" *ngIf="product.InEdit" name="category_id" [(ngModel)]="product.category_id" (keyup.enter)="SaveProduct(product)"
+                (keyup.escape)="EditProduct(product, false)">
+                  <option *ngFor="let categ of categories" [value]="categ.id">{{categ.name}}</option>
+                </select>
+
+                <div *ngIf="product.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['category_id']"
+                  class="alert alert-danger m-0 p-2">
+                  {{errorObj.DetailedMessages['category_id']}}
+                </div>
+              </td>
               <td>{{product.stores}} </td>
               <td>{{product.lastPrice}} </td>
               <td>{{product.avgPrice}} </td>

@@ -4,6 +4,7 @@ import { EditableObject } from "./EditableObject";
 export interface Product extends EditableObject {
     id: number;
     name: string;
+    category_id: number;
     category: Category;
     stores: string;
     lastPrice: number;

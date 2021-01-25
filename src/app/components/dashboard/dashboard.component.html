@@ -42,7 +42,7 @@
                   {{store.name}}
                 </ng-container>
 
-                <input *ngIf="store.InEdit" name="name" [(ngModel)]="store.name" (keyup.enter)="SaveStore(store)"
+                <input class="form-control" *ngIf="store.InEdit" name="name" [(ngModel)]="store.name" (keyup.enter)="SaveStore(store)"
                   (keyup.escape)="EditStore(store, false)" />
 
                 <div *ngIf="store.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
@@ -94,7 +94,7 @@
                   {{categ.name}}
                 </ng-container>
 
-                <input *ngIf="categ.InEdit" name="name" [(ngModel)]="categ.name" (keyup.enter)="SaveCategory(categ)"
+                <input class="form-control" *ngIf="categ.InEdit" name="name" [(ngModel)]="categ.name" (keyup.enter)="SaveCategory(categ)"
                   (keyup.escape)="EditCategory(categ, false)" />
 
                 <div *ngIf="categ.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
