@@ -36,11 +36,6 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
     this.categoriesService.setAuthToken(this.authService.getToken());
   }
 
-  DoLogout() {
-    this.authService.logout();
-    this.router.navigate([environment.LoginRoute])
-  }
-
   ngOnInit(): void {
     super.ngOnInit();
 

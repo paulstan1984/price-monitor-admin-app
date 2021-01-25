@@ -11,13 +11,18 @@ import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MenuComponent } from './shared-components/menu/menu.component';
+import { ProductsComponent } from './components/products/products.component';
+import { PricesComponent } from './components/prices/prices.component';
+import { HeaderComponent } from './shared-components/header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
     DashboardComponent,
-    MenuComponent
+    MenuComponent, HeaderComponent,
+    ProductsComponent,
+    PricesComponent
   ],
   imports: [
     BrowserModule,
