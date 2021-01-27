@@ -14,6 +14,7 @@ import { MenuComponent } from './shared-components/menu/menu.component';
 import { ProductsComponent } from './components/products/products.component';
 import { PricesComponent } from './components/prices/prices.component';
 import { HeaderComponent } from './shared-components/header/header.component';
+import { PaginationModule } from 'ngx-bootstrap/pagination';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import { HeaderComponent } from './shared-components/header/header.component';
     HttpClientModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
+    PaginationModule
   ],
   providers: [],
   bootstrap: [AppComponent]

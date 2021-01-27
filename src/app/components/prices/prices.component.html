@@ -103,6 +103,13 @@
       <div *ngIf="!loading && prices!.length == 0" class="alert alert-danger alert-dismissible">
         No data.
       </div>
+
+      <div class="row">
+        <div class="col-xs-12 col-12">
+          <pagination [boundaryLinks]="true" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" 
+            lastText="&raquo;" [totalItems]="2" [(ngModel)]="currentPage" [rotate]="true"></pagination>
+        </div>
+      </div>
       
     </main>
   </div>

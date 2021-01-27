@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 import { Price } from '../models/Price';
+import { PricesSearchRequest } from '../models/PricesSearchRequest';
+import { PricesSearchResponse } from '../models/PricesSearchResponse';
 import { ServiceBase } from './ServiceBase';
 
 @Injectable({
@@ -23,6 +25,21 @@ export class PricesService extends ServiceBase {
       .get<Price[]>(this.ApiURL,  { headers: this.headers })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<Price[]>) => {
+          endCallback();
+          errorHandler(error);
+          return caught;
+        })
+      );
+  }
+
+  public search(searchRequest: PricesSearchRequest, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<PricesSearchResponse> {
+
+    startCallback();
+
+    return this.http
+      .post<PricesSearchResponse>(this.ApiURL, searchRequest, { headers: this.headers })
+      .pipe(
+        catchError((error: HttpErrorResponse, caught: Observable<PricesSearchResponse>) => {
           endCallback();
           errorHandler(error);
           return caught;

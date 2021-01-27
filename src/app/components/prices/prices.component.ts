@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Price } from 'src/app/models/Price';
+import { PricesSearchRequest } from 'src/app/models/PricesSearchRequest';
+import { PricesSearchResponse } from 'src/app/models/PricesSearchResponse';
 import { Product } from 'src/app/models/Product';
 import { Store } from 'src/app/models/Store';
 import { AuthService } from 'src/app/services/Auth.service';
@@ -20,6 +22,12 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
   public backupPrice: Price | undefined = undefined;
   public products: Product[] = [];
   public stores: Store[] = [];
+  public searchRequest: PricesSearchRequest = {
+    page: 1
+  } as PricesSearchRequest
+  public searchResponse: PricesSearchResponse | undefined = undefined;
+
+  currentPage = 1;
 
   constructor(
     authService: AuthService,
@@ -71,6 +79,26 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
       })
   }
 
+  searchPrices() {
+    this.pricesService
+      .search(this.searchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(response => {
+        this.setLoading(false);
+        this.searchResponse = response;
+      })
+  }
+
+  setPage(page: number) {
+    this.searchRequest.page = page;
+    this.searchPrices();
+  }
+
+  orderBy(field: string, dir: string = 'ASC') {
+    this.searchRequest.order_by = field;
+    this.searchRequest.order_by_dir = dir;
+    this.searchPrices();
+  }
+
   NewPrice() {
     this.prices.map(s => this.UneditPrice(s));
 
@@ -79,7 +107,7 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
     this.prices.push(newPrice);
   }
 
-  protected UneditPrice(s: Price){
+  protected UneditPrice(s: Price) {
     if (s.InEdit) {
       Object.assign(s, this.backupPrice!);
     }
