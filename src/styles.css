@@ -16,3 +16,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .form-control.ng-dirty.ng-invalid {
     background-color: #f8d7da;
 }
+
+.hand {
+    cursor: pointer;
+}

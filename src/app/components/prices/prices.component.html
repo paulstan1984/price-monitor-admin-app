@@ -18,6 +18,25 @@
         </div>
       </div>
 
+      <div class="row">
+        <form class="col-12" action="#" method="post" role="form" #f="ngForm" (ngSubmit)="DoFilter(f)">
+          <div class="row mb-3">
+            <div class="col-md-6 col-lg-3">
+              <input type="text" class="form-control" placeholder="Store" name="store" [(ngModel)]="searchRequest.store">
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <input type="text" class="form-control" placeholder="Product" name="product" [(ngModel)]="searchRequest.product">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <button class="btn btn btn-primary" type="submit"><i class="fas fa-filter"></i> Filter</button>
+
+            <button class="btn btn btn-secondary ml-2" (click)="ResetFilters()"><i class="fas fa-undo"></i> Reset</button>
+          </div>
+        </form>
+      </div>
+
       <div *ngIf="errorObj && errorObj.GlobalMessage" class="alert alert-danger alert-dismissible">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{errorObj.GlobalMessage}}
@@ -27,29 +46,66 @@
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Product</th>
-              <th>Store</th>
-              <th>Amount</th>
-              <th>Created</th>
-              <th>Updated</th>
+              <th>
+                <a (click)="OrderBy('id')" class="hand">
+                # 
+                  <i *ngIf="searchRequest?.order_by == 'id' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
+                  <i *ngIf="searchRequest?.order_by == 'id' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
+              <th>
+                <a (click)="OrderBy('product_id.products.name')" class="hand">
+                Product 
+                  <i *ngIf="searchRequest?.order_by == 'product_id.products.name' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
+                  <i *ngIf="searchRequest?.order_by == 'product_id.products.name' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
+              <th>
+                <a (click)="OrderBy('store_id.stores.name')" class="hand">
+                Store 
+                  <i *ngIf="searchRequest?.order_by == 'store_id.stores.name' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
+                  <i *ngIf="searchRequest?.order_by == 'store_id.stores.name' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
+              <th>
+                <a (click)="OrderBy('amount')" class="hand">
+                Amount
+                  <i *ngIf="searchRequest?.order_by == 'amount' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
+                  <i *ngIf="searchRequest?.order_by == 'amount' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
+              <th>
+                <a (click)="OrderBy('created_at')" class="hand">
+                Created
+                  <i *ngIf="searchRequest?.order_by == 'created_at' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
+                  <i *ngIf="searchRequest?.order_by == 'created_at' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
+              <th>
+                <a (click)="OrderBy('updated_at')" class="hand">
+                Updated
+                  <i *ngIf="searchRequest?.order_by == 'updated_at' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
+                  <i *ngIf="searchRequest?.order_by == 'updated_at' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody *ngIf="prices!.length > 0">
-            <tr *ngFor="let price of prices">
+          <tbody *ngIf="searchResponse?.results && searchResponse?.results.length > 0">
+            <tr *ngFor="let price of searchResponse?.results">
               <td>{{price.id}}</td>
               <td>
                 <ng-container *ngIf="!price.InEdit">
                   {{price.product?.name}}
                 </ng-container>
 
-                <select class="form-control" *ngIf="price.InEdit" name="product_id" [(ngModel)]="price.product_id" (keyup.enter)="SavePrice(price)"
-                (keyup.escape)="EditPrice(price, false)">
+                <select class="form-control" *ngIf="price.InEdit" name="product_id" [(ngModel)]="price.product_id"
+                  (keyup.enter)="SavePrice(price)" (keyup.escape)="EditPrice(price, false)">
                   <option *ngFor="let prod of products" [value]="prod.id">{{prod.name}}</option>
                 </select>
 
-                <div *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['product_id']"
+                <div
+                  *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['product_id']"
                   class="alert alert-danger m-0 p-2">
                   {{errorObj.DetailedMessages['product_id']}}
                 </div>
@@ -59,25 +115,27 @@
                   {{price.store?.name}}
                 </ng-container>
 
-                <select class="form-control" *ngIf="price.InEdit" name="store_id" [(ngModel)]="price.store_id" (keyup.enter)="SavePrice(price)"
-                (keyup.escape)="EditPrice(price, false)">
+                <select class="form-control" *ngIf="price.InEdit" name="store_id" [(ngModel)]="price.store_id"
+                  (keyup.enter)="SavePrice(price)" (keyup.escape)="EditPrice(price, false)">
                   <option *ngFor="let store of stores" [value]="store.id">{{store.name}}</option>
                 </select>
 
-                <div *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['store_id']"
+                <div
+                  *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['store_id']"
                   class="alert alert-danger m-0 p-2">
                   {{errorObj.DetailedMessages['store_id']}}
                 </div>
               </td>
               <td>
                 <ng-container *ngIf="!price.InEdit">
-                  {{price.amount}} 
+                  {{price.amount}}
                 </ng-container>
 
-                <input class="form-control" *ngIf="price.InEdit" name="amount" [(ngModel)]="price.amount" (keyup.enter)="SavePrice(price)"
-                  (keyup.escape)="EditPrice(price, false)" type="number"/>
+                <input class="form-control" *ngIf="price.InEdit" name="amount" [(ngModel)]="price.amount"
+                  (keyup.enter)="SavePrice(price)" (keyup.escape)="EditPrice(price, false)" type="number" />
 
-                <div *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['amount']"
+                <div
+                  *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['amount']"
                   class="alert alert-danger m-0 p-2">
                   {{errorObj.DetailedMessages['amount']}}
                 </div>
@@ -100,17 +158,18 @@
         </table>
       </div>
 
-      <div *ngIf="!loading && prices!.length == 0" class="alert alert-danger alert-dismissible">
+      <div *ngIf="!loading && searchResponse && searchResponse.count == 0" class="alert alert-danger alert-dismissible">
         No data.
       </div>
 
-      <div class="row">
+      <div class="row" *ngIf="searchResponse">
         <div class="col-xs-12 col-12">
-          <pagination [boundaryLinks]="true" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;" 
-            lastText="&raquo;" [totalItems]="2" [(ngModel)]="currentPage" [rotate]="true"></pagination>
+          <pagination [boundaryLinks]="true" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+            lastText="&raquo;" [totalItems]="searchResponse.count" [ngModel]="currentPage"
+            [itemsPerPage]="searchResponse.page_size" [rotate]="true" (pageChanged)="setPage($event)"></pagination>
         </div>
       </div>
-      
+
     </main>
   </div>
 </div>

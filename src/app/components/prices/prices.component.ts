@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Price } from 'src/app/models/Price';
 import { PricesSearchRequest } from 'src/app/models/PricesSearchRequest';
@@ -18,7 +19,6 @@ import { LoggedInComponent } from '../LoggedInComponent';
 })
 export class PricesComponent extends LoggedInComponent implements OnInit {
 
-  public prices: Price[] = [];
   public backupPrice: Price | undefined = undefined;
   public products: Product[] = [];
   public stores: Store[] = [];
@@ -46,9 +46,9 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.loadPrices();
     this.loadCategories();
     this.loadProducts();
+    this.searchPrices();
   }
 
   loadCategories() {
@@ -70,13 +70,34 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
   }
 
   //#region prices
-  loadPrices() {
-    this.pricesService
-      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(prices => {
-        this.setLoading(false);
-        this.prices = prices;
-      })
+
+  OrderBy(field: string) {
+    if (this.searchRequest.order_by == field) {
+      if (this.searchRequest.order_by_dir == 'ASC') {
+        this.searchRequest.order_by_dir = 'DESC';
+      } else {
+        this.searchRequest.order_by_dir = 'ASC'
+      }
+    } else {
+      this.searchRequest.order_by = field;
+      this.searchRequest.order_by_dir = 'ASC';
+    }
+
+    this.searchPrices();
+  }
+
+  DoFilter(f: NgForm) {
+    if (!this.validateForm(f)) {
+      return;
+    }
+
+    this.searchPrices();
+  }
+
+  ResetFilters() {
+    delete(this.searchRequest.product);
+    delete(this.searchRequest.store);
+    this.searchPrices();
   }
 
   searchPrices() {
@@ -85,11 +106,12 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
       .subscribe(response => {
         this.setLoading(false);
         this.searchResponse = response;
+        this.currentPage = response.page;
       })
   }
 
-  setPage(page: number) {
-    this.searchRequest.page = page;
+  setPage(pageInfo: any) {
+    this.searchRequest.page = pageInfo.page;
     this.searchPrices();
   }
 
@@ -100,11 +122,11 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
   }
 
   NewPrice() {
-    this.prices.map(s => this.UneditPrice(s));
+    this.searchResponse?.results.map(s => this.UneditPrice(s))
 
     let newPrice = { InEdit: true } as Price;
     this.backupPrice = Object.assign({}, newPrice);
-    this.prices.push(newPrice);
+    this.searchResponse?.results.push(newPrice);
   }
 
   protected UneditPrice(s: Price) {
@@ -113,7 +135,7 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
     }
 
     if (!s.id) {
-      this.prices.splice(-1, 1);
+      this.searchResponse?.results.splice(-1, 1);
     }
 
     s.InEdit = false;
@@ -121,7 +143,7 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
 
   EditPrice(price: Price, editable: boolean) {
 
-    this.prices.map(s => this.UneditPrice(s));
+    this.searchResponse?.results.map(s => this.UneditPrice(s));
 
     if (editable) {
       this.backupPrice = Object.assign({}, price);
@@ -135,7 +157,7 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
   SavePrice(price: Price) {
     this.pricesService.save(price, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(() => {
-        this.loadPrices();
+        this.searchPrices();
       })
   }
 
@@ -143,7 +165,7 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
     if (confirm('Confirmați ștergerea?')) {
       this.pricesService.delete(price, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
         .subscribe(() => {
-          this.loadPrices();
+          this.searchPrices();
         });
     }
   }
