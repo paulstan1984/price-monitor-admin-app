@@ -91,7 +91,7 @@
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody *ngIf="searchResponse?.results && searchResponse?.results.length > 0">
+          <tbody *ngIf="searchResponse && searchResponse?.results!.length > 0">
             <tr *ngFor="let price of searchResponse?.results">
               <td>{{price.id}}</td>
               <td>

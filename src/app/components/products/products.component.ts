@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Category } from 'src/app/models/Category';
 import { Product } from 'src/app/models/Product';
+import { ProductsSearchRequest } from 'src/app/models/ProductsSearchRequest';
+import { ProductsSearchResponse } from 'src/app/models/ProductsSearchResponse';
 import { AuthService } from 'src/app/services/Auth.service';
 import { CategoriesService } from 'src/app/services/Categories.service';
 import { ProductsService } from 'src/app/services/Products.service';
-import { environment } from 'src/environments/environment';
 import { LoggedInComponent } from '../LoggedInComponent';
 
 @Component({
@@ -15,9 +17,14 @@ import { LoggedInComponent } from '../LoggedInComponent';
 })
 export class ProductsComponent extends LoggedInComponent implements OnInit {
 
-  public products: Product[] = [];
   public backupProduct: Product | undefined = undefined;
   public categories: Category[] = [];
+  public searchRequest: ProductsSearchRequest = {
+    page: 1
+  } as ProductsSearchRequest
+  public searchResponse: ProductsSearchResponse | undefined = undefined;
+
+  currentPage = 1;
 
   constructor(
     authService: AuthService,
@@ -34,7 +41,7 @@ export class ProductsComponent extends LoggedInComponent implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
 
-    this.loadProducts();
+    this.searchProducts();
     this.loadCategories();
   }
 
@@ -48,21 +55,62 @@ export class ProductsComponent extends LoggedInComponent implements OnInit {
   }
 
   //#region products
-  loadProducts() {
+  OrderBy(field: string) {
+    if (this.searchRequest.order_by == field) {
+      if (this.searchRequest.order_by_dir == 'ASC') {
+        this.searchRequest.order_by_dir = 'DESC';
+      } else {
+        this.searchRequest.order_by_dir = 'ASC'
+      }
+    } else {
+      this.searchRequest.order_by = field;
+      this.searchRequest.order_by_dir = 'ASC';
+    }
+
+    this.searchProducts();
+  }
+
+  DoFilter(f: NgForm) {
+    if (!this.validateForm(f)) {
+      return;
+    }
+
+    this.searchProducts();
+  }
+
+  ResetFilters() {
+    delete(this.searchRequest.name);
+    delete(this.searchRequest.category);
+    this.searchProducts();
+  }
+
+  searchProducts() {
     this.productsService
-      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(products => {
+      .search(this.searchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(response => {
         this.setLoading(false);
-        this.products = products;
+        this.searchResponse = response;
+        this.currentPage = response.page;
       })
   }
 
+  setPage(pageInfo: any) {
+    this.searchRequest.page = pageInfo.page;
+    this.searchProducts();
+  }
+
+  orderBy(field: string, dir: string = 'ASC') {
+    this.searchRequest.order_by = field;
+    this.searchRequest.order_by_dir = dir;
+    this.searchProducts();
+  }
+
   NewProduct() {
-    this.products.map(s => this.UneditProduct(s));
+    this.searchResponse?.results.map(s => this.UneditProduct(s));
 
     let newProduct = { InEdit: true } as Product;
     this.backupProduct = Object.assign({}, newProduct);
-    this.products.push(newProduct);
+    this.searchResponse?.results.push(newProduct);
   }
 
   protected UneditProduct(s: Product){
@@ -71,7 +119,7 @@ export class ProductsComponent extends LoggedInComponent implements OnInit {
     }
 
     if (!s.id) {
-      this.products.splice(-1, 1);
+      this.searchResponse?.results.splice(-1, 1);
     }
 
     s.InEdit = false;
@@ -79,7 +127,7 @@ export class ProductsComponent extends LoggedInComponent implements OnInit {
 
   EditProduct(product: Product, editable: boolean) {
 
-    this.products.map(s => this.UneditProduct(s));
+    this.searchResponse?.results.map(s => this.UneditProduct(s));
 
     if (editable) {
       this.backupProduct = Object.assign({}, product);
@@ -93,7 +141,7 @@ export class ProductsComponent extends LoggedInComponent implements OnInit {
   SaveProduct(product: Product) {
     this.productsService.save(product, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(() => {
-        this.loadProducts();
+        this.searchProducts();
       })
   }
 
@@ -101,7 +149,7 @@ export class ProductsComponent extends LoggedInComponent implements OnInit {
     if (confirm('Confirmați ștergerea?')) {
       this.productsService.delete(product, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
         .subscribe(() => {
-          this.loadProducts();
+          this.searchProducts();
         });
     }
   }

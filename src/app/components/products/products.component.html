@@ -18,6 +18,27 @@
         </div>
       </div>
 
+      <div class="row">
+        <form class="col-12" action="#" method="post" role="form" #f="ngForm" (ngSubmit)="DoFilter(f)">
+          <div class="row mb-3">
+            <div class="col-md-6 col-lg-3">
+              <input type="text" class="form-control" placeholder="Name" name="name" [(ngModel)]="searchRequest.name">
+            </div>
+            <div class="col-md-6 col-lg-3">
+              <input type="text" class="form-control" placeholder="Category" name="category"
+                [(ngModel)]="searchRequest.category">
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <button class="btn btn btn-primary" type="submit"><i class="fas fa-filter"></i> Filter</button>
+
+            <button class="btn btn btn-secondary ml-2" (click)="ResetFilters()"><i class="fas fa-undo"></i>
+              Reset</button>
+          </div>
+        </form>
+      </div>
+
       <div *ngIf="errorObj && errorObj.GlobalMessage" class="alert alert-danger alert-dismissible">
         <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
         {{errorObj.GlobalMessage}}
@@ -27,29 +48,69 @@
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Category</th>
+              <th>
+                <a (click)="OrderBy('id')" class="hand">
+                  #
+                  <i *ngIf="searchRequest?.order_by == 'id' && searchRequest?.order_by_dir == 'DESC'"
+                    class="fas fa-sort-amount-down"></i>
+                  <i *ngIf="searchRequest?.order_by == 'id' && searchRequest?.order_by_dir == 'ASC'"
+                    class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
+              <th>
+                <a (click)="OrderBy('name')" class="hand">
+                  Name
+                  <i *ngIf="searchRequest?.order_by == 'name' && searchRequest?.order_by_dir == 'DESC'"
+                    class="fas fa-sort-amount-down"></i>
+                  <i *ngIf="searchRequest?.order_by == 'name' && searchRequest?.order_by_dir == 'ASC'"
+                    class="fas fa-sort-amount-up"></i>
+                </a>
+              <th>
+                <a (click)="OrderBy('category_id.categories.name')" class="hand">
+                  Category
+                  <i *ngIf="searchRequest?.order_by == 'category_id.categories.name' && searchRequest?.order_by_dir == 'DESC'"
+                    class="fas fa-sort-amount-down"></i>
+                  <i *ngIf="searchRequest?.order_by == 'category_id.categories.name' && searchRequest?.order_by_dir == 'ASC'"
+                    class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
               <th>Stores</th>
               <th>Last Price</th>
               <th>Avg Price</th>
-              <th>Created</th>
-              <th>Updated</th>
+              <th>
+                <a (click)="OrderBy('created_at')" class="hand">
+                  Created
+                  <i *ngIf="searchRequest?.order_by == 'created_at' && searchRequest?.order_by_dir == 'DESC'"
+                    class="fas fa-sort-amount-down"></i>
+                  <i *ngIf="searchRequest?.order_by == 'created_at' && searchRequest?.order_by_dir == 'ASC'"
+                    class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
+              <th>
+                <a (click)="OrderBy('updated_at')" class="hand">
+                  Updated
+                  <i *ngIf="searchRequest?.order_by == 'updated_at' && searchRequest?.order_by_dir == 'DESC'"
+                    class="fas fa-sort-amount-down"></i>
+                  <i *ngIf="searchRequest?.order_by == 'updated_at' && searchRequest?.order_by_dir == 'ASC'"
+                    class="fas fa-sort-amount-up"></i>
+                </a>
+              </th>
               <th>Actions</th>
             </tr>
           </thead>
-          <tbody *ngIf="products!.length > 0">
-            <tr *ngFor="let product of products">
+          <tbody *ngIf="searchResponse && searchResponse?.results!.length > 0">
+            <tr *ngFor="let product of searchResponse?.results">
               <td>{{product.id}}</td>
               <td>
                 <ng-container *ngIf="!product.InEdit">
                   {{product.name}}
                 </ng-container>
 
-                <input class="form-control" *ngIf="product.InEdit" name="name" [(ngModel)]="product.name" (keyup.enter)="SaveProduct(product)"
-                  (keyup.escape)="EditProduct(product, false)" />
+                <input class="form-control" *ngIf="product.InEdit" name="name" [(ngModel)]="product.name"
+                  (keyup.enter)="SaveProduct(product)" (keyup.escape)="EditProduct(product, false)" />
 
-                <div *ngIf="product.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
+                <div
+                  *ngIf="product.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
                   class="alert alert-danger m-0 p-2">
                   {{errorObj.DetailedMessages['name']}}
                 </div>
@@ -59,12 +120,13 @@
                   {{product.category?.name}}
                 </ng-container>
 
-                <select class="form-control" *ngIf="product.InEdit" name="category_id" [(ngModel)]="product.category_id" (keyup.enter)="SaveProduct(product)"
-                (keyup.escape)="EditProduct(product, false)">
+                <select class="form-control" *ngIf="product.InEdit" name="category_id" [(ngModel)]="product.category_id"
+                  (keyup.enter)="SaveProduct(product)" (keyup.escape)="EditProduct(product, false)">
                   <option *ngFor="let categ of categories" [value]="categ.id">{{categ.name}}</option>
                 </select>
 
-                <div *ngIf="product.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['category_id']"
+                <div
+                  *ngIf="product.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['category_id']"
                   class="alert alert-danger m-0 p-2">
                   {{errorObj.DetailedMessages['category_id']}}
                 </div>
@@ -89,10 +151,18 @@
         </table>
       </div>
 
-      <div *ngIf="!loading && products!.length == 0" class="alert alert-danger alert-dismissible">
+      <div *ngIf="!loading && searchResponse && searchResponse.count == 0" class="alert alert-danger alert-dismissible">
         No data.
       </div>
-      
+
+      <div class="row" *ngIf="searchResponse">
+        <div class="col-xs-12 col-12">
+          <pagination [boundaryLinks]="true" previousText="&lsaquo;" nextText="&rsaquo;" firstText="&laquo;"
+            lastText="&raquo;" [totalItems]="searchResponse.count" [ngModel]="currentPage"
+            [itemsPerPage]="searchResponse.page_size" [rotate]="true" (pageChanged)="setPage($event)"></pagination>
+        </div>
+      </div>
+
     </main>
   </div>
 </div>
