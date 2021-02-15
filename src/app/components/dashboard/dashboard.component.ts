@@ -5,7 +5,6 @@ import { Store } from 'src/app/models/Store';
 import { AuthService } from 'src/app/services/Auth.service';
 import { CategoriesService } from 'src/app/services/Categories.service';
 import { StoresService } from 'src/app/services/Stores.service';
-import { environment } from 'src/environments/environment';
 import { LoggedInComponent } from '../LoggedInComponent';
 
 @Component({
@@ -20,9 +19,6 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
 
   public categories: Category[] = [];
   public backupCategory: Category | undefined = undefined;
-
-  // public products: Product[] = [];
-  // public backupProduct: Product | undefined = undefined;
 
   constructor(
     authService: AuthService,

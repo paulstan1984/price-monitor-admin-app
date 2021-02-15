@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/Auth.service';
 import { environment } from 'src/environments/environment';
@@ -16,9 +16,22 @@ export class HeaderComponent {
   ) {
   }
 
-  
+
   DoLogout() {
     this.authService.logout();
     this.router.navigate([environment.LoginRoute])
   }
+
+  private menuExpanded = false;
+
+  toggleMenu() {
+    this.menuExpanded = !this.menuExpanded;
+    if (this.menuExpanded) {
+      window.scroll(0, 0);
+    }
+    this.onMenuExpanded?.emit(this.menuExpanded);
+  }
+
+  @Output()
+  onMenuExpanded: EventEmitter<boolean> = new EventEmitter<boolean>();
 }

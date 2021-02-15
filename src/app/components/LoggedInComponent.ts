@@ -6,6 +6,12 @@ import { BaseComponent } from "./BaseComponent";
 @Injectable()
 export class LoggedInComponent extends BaseComponent implements OnInit {
 
+    public menuExpanded : boolean | undefined;
+
+    public onMenuExpanded(expanded: boolean) {
+      this.menuExpanded = expanded;
+    }
+
     constructor(
         protected authService: AuthService,
         protected router: Router

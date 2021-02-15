@@ -1,8 +1,8 @@
-<app-header></app-header>
+<app-header (onMenuExpanded) = onMenuExpanded($event)></app-header>
 
 <div class="container-fluid">
   <div class="row">
-    <app-menu></app-menu>
+    <app-menu [expanded] = "menuExpanded"></app-menu>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
@@ -88,7 +88,7 @@
                   <i *ngIf="searchRequest?.order_by == 'updated_at' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
                 </a>
               </th>
-              <th>Actions</th>
+              <th nowrap>Actions</th>
             </tr>
           </thead>
           <tbody *ngIf="searchResponse && searchResponse?.results!.length > 0">
@@ -143,7 +143,7 @@
 
               <td>{{price.created_at | date : dateTimeFormal}} </td>
               <td>{{price.updated_at | date : dateTimeFormal}}</td>
-              <td>
+              <td nowrap>
                 <button type="button" *ngIf="!price.InEdit" class="mr-2 btn btn-sm btn-secondary"
                   (click)="EditPrice(price, true)"><i class="fas fa-edit"></i></button>
                 <button type="button" *ngIf="price.InEdit" class="mr-2 btn btn-sm btn-success"

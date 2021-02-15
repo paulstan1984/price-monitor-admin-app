@@ -1,8 +1,8 @@
-<app-header></app-header>
+<app-header (onMenuExpanded) = onMenuExpanded($event)></app-header>
 
 <div class="container-fluid">
   <div class="row">
-    <app-menu></app-menu>
+    <app-menu [expanded] = "menuExpanded"></app-menu>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
@@ -31,7 +31,7 @@
               <th>Name</th>
               <th>Created</th>
               <th>Updated</th>
-              <th>Actions</th>
+              <th nowrap>Actions</th>
             </tr>
           </thead>
           <tbody *ngIf="stores!.length > 0">
@@ -52,7 +52,7 @@
               </td>
               <td>{{store.created_at | date : dateTimeFormal}} </td>
               <td>{{store.updated_at | date : dateTimeFormal}}</td>
-              <td>
+              <td nowrap>
                 <button type="button" *ngIf="!store.InEdit" class="mr-2 btn btn-sm btn-secondary"
                   (click)="EditStore(store, true)"><i class="fas fa-edit"></i></button>
                 <button type="button" *ngIf="store.InEdit" class="mr-2 btn btn-sm btn-success"
