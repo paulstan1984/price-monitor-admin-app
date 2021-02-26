@@ -15,6 +15,7 @@ import { ProductsComponent } from './components/products/products.component';
 import { PricesComponent } from './components/prices/prices.component';
 import { HeaderComponent } from './shared-components/header/header.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { PaginationModule } from 'ngx-bootstrap/pagination';
     HttpClientModule,
     BrowserAnimationsModule,
     MatProgressSpinnerModule,
-    PaginationModule
+    PaginationModule,
+    NgxChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

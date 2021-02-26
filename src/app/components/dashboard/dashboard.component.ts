@@ -20,6 +20,103 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
   public categories: Category[] = [];
   public backupCategory: Category | undefined = undefined;
 
+  // options
+  showXAxis = true;
+  showYAxis = true;
+  gradient = false;
+  showLegend = true;
+  showXAxisLabel = true;
+  xAxisLabel = 'Country';
+  showYAxisLabel = true;
+  yAxisLabel = 'Population';
+  colorScheme = {
+    domain: ['#5AA454', '#A10A28', '#C7B42C', '#AAAAAA']
+  };
+  data = [
+    {
+      "name": "Germany",
+      "value": 8940000
+    },
+    {
+      "name": "USA",
+      "value": 5000000
+    },
+    {
+      "name": "France",
+      "value": 7200000
+    }
+  ];
+
+  multi = [
+    {
+      "name": "Germany",
+      "series": [
+        {
+          "name": "1990",
+          "value": 62000000
+        },
+        {
+          "name": "2010",
+          "value": 73000000
+        },
+        {
+          "name": "2011",
+          "value": 89400000
+        }
+      ]
+    },
+
+    {
+      "name": "USA",
+      "series": [
+        {
+          "name": "1990",
+          "value": 250000000
+        },
+        {
+          "name": "2010",
+          "value": 309000000
+        },
+        {
+          "name": "2011",
+          "value": 311000000
+        }
+      ]
+    },
+
+    {
+      "name": "France",
+      "series": [
+        {
+          "name": "1990",
+          "value": 58000000
+        },
+        {
+          "name": "2010",
+          "value": 50000020
+        },
+        {
+          "name": "2011",
+          "value": 58000000
+        }
+      ]
+    },
+    {
+      "name": "UK",
+      "series": [
+        {
+          "name": "1990",
+          "value": 57000000
+        },
+        {
+          "name": "2010",
+          "value": 62000000
+        }
+      ]
+    }
+  ];
+
+
   constructor(
     authService: AuthService,
     router: Router,
@@ -57,7 +154,7 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
     this.stores.push(newStore);
   }
 
-  protected UneditStore(s: Store){
+  protected UneditStore(s: Store) {
     if (s.InEdit) {
       Object.assign(s, this.backupStore!);
     }
@@ -117,7 +214,7 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
     this.categories.push(newCategory);
   }
 
-  protected UneditCategory(s: Category){
+  protected UneditCategory(s: Category) {
     if (s.InEdit) {
       Object.assign(s, this.backupCategory!);
     }

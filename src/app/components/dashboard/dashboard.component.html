@@ -1,10 +1,26 @@
-<app-header (onMenuExpanded) = onMenuExpanded($event)></app-header>
+<app-header (onMenuExpanded)=onMenuExpanded($event)></app-header>
 
 <div class="container-fluid">
   <div class="row">
-    <app-menu [expanded] = "menuExpanded"></app-menu>
+    <app-menu [expanded]="menuExpanded"></app-menu>
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+
+        <ngx-charts-bar-vertical [scheme]="colorScheme" [results]="data" [gradient]="gradient"
+          [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel">
+        </ngx-charts-bar-vertical>
+      </div>
+
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
+
+        <ngx-charts-line-chart [scheme]="colorScheme" [results]="multi" [gradient]="gradient"
+          [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend" [showXAxisLabel]="showXAxisLabel"
+          [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel">
+        </ngx-charts-line-chart>
+      </div>
 
       <!--Stores-->
 
@@ -42,8 +58,8 @@
                   {{store.name}}
                 </ng-container>
 
-                <input class="form-control" *ngIf="store.InEdit" name="name" [(ngModel)]="store.name" (keyup.enter)="SaveStore(store)"
-                  (keyup.escape)="EditStore(store, false)" />
+                <input class="form-control" *ngIf="store.InEdit" name="name" [(ngModel)]="store.name"
+                  (keyup.enter)="SaveStore(store)" (keyup.escape)="EditStore(store, false)" />
 
                 <div *ngIf="store.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
                   class="alert alert-danger m-0 p-2">
@@ -94,8 +110,8 @@
                   {{categ.name}}
                 </ng-container>
 
-                <input class="form-control" *ngIf="categ.InEdit" name="name" [(ngModel)]="categ.name" (keyup.enter)="SaveCategory(categ)"
-                  (keyup.escape)="EditCategory(categ, false)" />
+                <input class="form-control" *ngIf="categ.InEdit" name="name" [(ngModel)]="categ.name"
+                  (keyup.enter)="SaveCategory(categ)" (keyup.escape)="EditCategory(categ, false)" />
 
                 <div *ngIf="categ.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
                   class="alert alert-danger m-0 p-2">
