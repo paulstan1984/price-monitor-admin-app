@@ -43,16 +43,16 @@
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th>#</th>
+              <th class="d-none d-sm-none d-md-table-cell">#</th>
               <th>Name</th>
-              <th>Created</th>
-              <th>Updated</th>
+              <th class="d-none d-sm-none d-md-table-cell">Created</th>
+              <th class="d-none d-sm-none d-md-table-cell">Updated</th>
               <th nowrap>Actions</th>
             </tr>
           </thead>
           <tbody *ngIf="stores!.length > 0">
             <tr *ngFor="let store of stores">
-              <td>{{store.id}}</td>
+              <td class="d-none d-sm-none d-md-table-cell">{{store.id}}</td>
               <td>
                 <ng-container *ngIf="!store.InEdit">
                   {{store.name}}
@@ -66,8 +66,8 @@
                   {{errorObj.DetailedMessages['name']}}
                 </div>
               </td>
-              <td>{{store.created_at | date : dateTimeFormal}} </td>
-              <td>{{store.updated_at | date : dateTimeFormal}}</td>
+              <td class="d-none d-sm-none d-md-table-cell">{{store.created_at | date : dateTimeFormal}} </td>
+              <td class="d-none d-sm-none d-md-table-cell">{{store.updated_at | date : dateTimeFormal}}</td>
               <td nowrap>
                 <button type="button" *ngIf="!store.InEdit" class="mr-2 btn btn-sm btn-secondary"
                   (click)="EditStore(store, true)"><i class="fas fa-edit"></i></button>
@@ -102,7 +102,7 @@
       </div>
 
       <div class="row">
-        <div class="col-md-6 col-lg-3" *ngFor="let categ of categories!">
+        <div class="col-md-6 col-lg-3 col-6" *ngFor="let categ of categories!">
           <div class="card">
             <div class="card-body">
               <h5 class="card-title">
@@ -118,7 +118,7 @@
                   {{errorObj.DetailedMessages['name']}}
                 </div>
               </h5>
-              <p class="card-text" *ngIf="categ!.id>0">
+              <p class="d-none d-sm-none d-md-block card-text" *ngIf="categ!.id>0">
                 Created: {{categ.created_at | date : dateTimeFormal}}<br />
                 Updated: {{categ.updated_at | date : dateTimeFormal}}
               </p>

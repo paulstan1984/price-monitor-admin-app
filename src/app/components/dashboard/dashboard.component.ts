@@ -20,6 +20,7 @@ export class DashboardComponent extends LoggedInComponent implements OnInit {
   public categories: Category[] = [];
   public backupCategory: Category | undefined = undefined;
 
+  // https://swimlane.gitbook.io/ngx-charts/
   // options
   showXAxis = true;
   showYAxis = true;

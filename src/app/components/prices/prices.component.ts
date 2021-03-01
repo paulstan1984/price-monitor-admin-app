@@ -48,6 +48,9 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
 
     this.loadCategories();
     this.loadProducts();
+    
+    this.searchRequest.order_by = 'created_at';
+    this.searchRequest.order_by_dir = 'DESC';
     this.searchPrices();
   }
 
@@ -112,12 +115,6 @@ export class PricesComponent extends LoggedInComponent implements OnInit {
 
   setPage(pageInfo: any) {
     this.searchRequest.page = pageInfo.page;
-    this.searchPrices();
-  }
-
-  orderBy(field: string, dir: string = 'ASC') {
-    this.searchRequest.order_by = field;
-    this.searchRequest.order_by_dir = dir;
     this.searchPrices();
   }
 

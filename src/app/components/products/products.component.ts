@@ -99,12 +99,6 @@ export class ProductsComponent extends LoggedInComponent implements OnInit {
     this.searchProducts();
   }
 
-  orderBy(field: string, dir: string = 'ASC') {
-    this.searchRequest.order_by = field;
-    this.searchRequest.order_by_dir = dir;
-    this.searchProducts();
-  }
-
   NewProduct() {
     this.searchResponse?.results.map(s => this.UneditProduct(s));
 

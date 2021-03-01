@@ -46,7 +46,7 @@
         <table class="table table-striped table-sm">
           <thead>
             <tr>
-              <th>
+              <th class="d-none d-sm-none d-md-table-cell">
                 <a (click)="OrderBy('id')" class="hand">
                 # 
                   <i *ngIf="searchRequest?.order_by == 'id' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
@@ -74,14 +74,14 @@
                   <i *ngIf="searchRequest?.order_by == 'amount' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
                 </a>
               </th>
-              <th>
+              <th class="d-none d-sm-none d-md-table-cell">
                 <a (click)="OrderBy('created_at')" class="hand">
                 Created
                   <i *ngIf="searchRequest?.order_by == 'created_at' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
                   <i *ngIf="searchRequest?.order_by == 'created_at' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
                 </a>
               </th>
-              <th>
+              <th class="d-none d-sm-none d-md-table-cell">
                 <a (click)="OrderBy('updated_at')" class="hand">
                 Updated
                   <i *ngIf="searchRequest?.order_by == 'updated_at' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
@@ -93,7 +93,7 @@
           </thead>
           <tbody *ngIf="searchResponse && searchResponse?.results!.length > 0">
             <tr *ngFor="let price of searchResponse?.results">
-              <td>{{price.id}}</td>
+              <td class="d-none d-sm-none d-md-table-cell">{{price.id}}</td>
               <td>
                 <ng-container *ngIf="!price.InEdit">
                   {{price.product?.name}}
@@ -141,8 +141,8 @@
                 </div>
               </td>
 
-              <td>{{price.created_at | date : dateTimeFormal}} </td>
-              <td>{{price.updated_at | date : dateTimeFormal}}</td>
+              <td class="d-none d-sm-none d-md-table-cell">{{price.created_at | date : dateTimeFormal}} </td>
+              <td class="d-none d-sm-none d-md-table-cell">{{price.updated_at | date : dateTimeFormal}}</td>
               <td nowrap>
                 <button type="button" *ngIf="!price.InEdit" class="mr-2 btn btn-sm btn-secondary"
                   (click)="EditPrice(price, true)"><i class="fas fa-edit"></i></button>
