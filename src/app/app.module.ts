@@ -16,6 +16,7 @@ import { PricesComponent } from './components/prices/prices.component';
 import { HeaderComponent } from './shared-components/header/header.component';
 import { PaginationModule } from 'ngx-bootstrap/pagination';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { StatisticsComponent } from './components/statistics/statistics.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
     DashboardComponent,
     MenuComponent, HeaderComponent,
     ProductsComponent,
-    PricesComponent
+    PricesComponent,
+    StatisticsComponent
   ],
   imports: [
     BrowserModule,

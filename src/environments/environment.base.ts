@@ -7,5 +7,6 @@ export const base_environment = {
     DashboardRoute: 'dashboard',
     LoginRoute: 'login',
     ProductsRoute: 'products',
-    PricesdRoute: 'prices'
+    PricesdRoute: 'prices',
+    StatisticsRoute: 'statistics'
 };
