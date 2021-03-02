@@ -52,7 +52,7 @@
 
             </div>
 
-            <div class="col-md-6 col-lg-9">
+            <div class="col-md-6 col-lg-5">
               <h2>Products</h2>
 
               <input type="text" class="form-control" (selectItem) = "selectProduct($event)"
@@ -63,6 +63,19 @@
                   {{p.name}}
 
                   <button (click)="removeProduct(p)" type="button" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></button>
+                </li>
+              </ul>
+            </div>
+
+            <div class="col-md-6 col-lg-4">
+              <h2>Stores</h2>
+
+              <ul class="list-group list-group-horizontal" *ngIf="stores && stores.length > 0">
+                <li class="list-group-item pt-2 pb-0" *ngFor="let s of stores">
+                  <label class="ml-2 pt-0 pb-0">
+                    <input class="form-check-input me-1" type="checkbox" value="">
+                    {{s.name}}
+                  </label>
                 </li>
               </ul>
             </div>

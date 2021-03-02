@@ -7,8 +7,10 @@ import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap,
 import { Product } from 'src/app/models/Product';
 import { ProductsSearchRequest } from 'src/app/models/ProductsSearchRequest';
 import { ProductsSearchResponse } from 'src/app/models/ProductsSearchResponse';
+import { Store } from 'src/app/models/Store';
 import { AuthService } from 'src/app/services/Auth.service';
 import { ProductsService } from 'src/app/services/Products.service';
+import { StoresService } from 'src/app/services/Stores.service';
 import { LoggedInComponent } from '../LoggedInComponent';
 
 @Component({
@@ -127,16 +129,19 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
   toDate: NgbDate | null;
   hoveredDate: NgbDate | null = null;
   products: Product[] = [];
+  stores: Store[] = [];
 
   constructor(
     authService: AuthService,
     private productsService: ProductsService,
+    private storesService: StoresService,
     router: Router,
     private calendar: NgbCalendar, public dateFormatter: NgbDateParserFormatter
   ) {
     super(authService, router);
 
     this.productsService.setAuthToken(this.authService.getToken());
+    this.storesService.setAuthToken(this.authService.getToken());
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
@@ -144,6 +149,12 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
   ngOnInit(): void {
     super.ngOnInit();
 
+    this.storesService
+      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(response => {
+        this.stores = response;
+        this.setLoading(false);
+      });
   }
 
   DoFilter(f: NgForm) {
@@ -217,4 +228,5 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
     this.products = this.products.filter(p => p.id != prod.id);
   }
   //#endregion
+
 }
