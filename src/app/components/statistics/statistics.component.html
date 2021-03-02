@@ -32,7 +32,8 @@
               <div class="form-group">
                 <div class="input-group">
                   <input #dpFromDate class="form-control" placeholder="yyyy-mm-dd" name="dpFromDate"
-                    [value]="dateFormatter.format(fromDate)" (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
+                    [value]="dateFormatter.format(fromDate)"
+                    (input)="fromDate = validateInput(fromDate, dpFromDate.value)">
                   <div class="input-group-append">
                     <button class="btn btn-outline-secondary far fa-calendar-plus" (click)="datepicker.toggle()"
                       type="button"></button>
@@ -55,14 +56,18 @@
             <div class="col-md-6 col-lg-5">
               <h2>Products</h2>
 
-              <input type="text" class="form-control" (selectItem) = "selectProduct($event)"
-                [ngbTypeahead]="SearchProduct" [inputFormatter]="productFormatter" [resultFormatter]="productFormatter" [editable]='false' />
+              <input type="text" class="form-control" (selectItem)="selectProduct($event)"
+                [ngbTypeahead]="SearchProduct" [inputFormatter]="productFormatter" [resultFormatter]="productFormatter"
+                [editable]='false' />
 
-              <ul class="list-group list-group-horizontal" *ngIf="products && products.length > 0">
-                <li class="list-group-item" *ngFor="let p of products">
+              <hr *ngIf="products && products.length > 0"/>
+
+              <ul class="custom-list" *ngIf="products && products.length > 0">
+                <li class="custom-list-item" *ngFor="let p of products">
+                  <button (click)="removeProduct(p)" type="button" class="btn btn-outline-danger btn-sm"><i
+                    class="fas fa-trash"></i></button>
+                  
                   {{p.name}}
-
-                  <button (click)="removeProduct(p)" type="button" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></button>
                 </li>
               </ul>
             </div>
@@ -70,8 +75,8 @@
             <div class="col-md-6 col-lg-4">
               <h2>Stores</h2>
 
-              <ul class="list-group list-group-horizontal" *ngIf="stores && stores.length > 0">
-                <li class="list-group-item pt-2 pb-0" *ngFor="let s of stores">
+              <ul class="custom-list" *ngIf="stores && stores.length > 0">
+                <li class="custom-list-item" *ngFor="let s of stores">
                   <label class="ml-2 pt-0 pb-0">
                     <input class="form-check-input me-1" type="checkbox" value="">
                     {{s.name}}

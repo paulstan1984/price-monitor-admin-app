@@ -20,3 +20,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .hand {
     cursor: pointer;
 }
+
+.custom-list {
+    list-style: none;
+    width: 100%;
+    display: block;
+    padding: 0px;
+    margin: 0px;
+    
+}
+
+.custom-list .custom-list-item button {
+    margin-left: -15px;
+}
+
+.custom-list .custom-list-item {
+    padding-left: 15px;
+    float: left;
+    width: 150px;
+    display: block;
+}
