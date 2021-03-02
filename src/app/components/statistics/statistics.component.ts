@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NgbCalendar, NgbDate, NgbDateParserFormatter } from '@ng-bootstrap/ng-bootstrap';
-import { Observable } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, map } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, filter, map, switchMap, tap } from 'rxjs/operators';
 import { Product } from 'src/app/models/Product';
+import { ProductsSearchRequest } from 'src/app/models/ProductsSearchRequest';
+import { ProductsSearchResponse } from 'src/app/models/ProductsSearchResponse';
 import { AuthService } from 'src/app/services/Auth.service';
+import { ProductsService } from 'src/app/services/Products.service';
 import { LoggedInComponent } from '../LoggedInComponent';
 
 @Component({
@@ -49,6 +52,7 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
   xAxisLabel = 'Data';
   showYAxisLabel = true;
   yAxisLabel = 'Price';
+
 
   multi = [
     {
@@ -126,11 +130,13 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
   constructor(
     authService: AuthService,
+    private productsService: ProductsService,
     router: Router,
     private calendar: NgbCalendar, public dateFormatter: NgbDateParserFormatter
   ) {
     super(authService, router);
 
+    this.productsService.setAuthToken(this.authService.getToken());
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
   }
@@ -147,7 +153,7 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
   }
 
-  
+  //#region Date Selection
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
@@ -175,19 +181,40 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
     const parsed = this.dateFormatter.parse(input);
     return parsed && this.calendar.isValid(NgbDate.from(parsed)) ? NgbDate.from(parsed) : currentValue;
   }
+  //#endregion
 
+  //#region Product Selection
   productFormatter = (product: Product) => product.name;
 
   SearchProduct = (text$: Observable<string>) => text$.pipe(
     debounceTime(200),
     distinctUntilChanged(),
     filter(term => term.length >= 2),
-    map(term => [{name: 'Făină'} as Product])
-  )
+    switchMap(term =>
+      this.productsService
+        .search({ name: term, page: 1 } as ProductsSearchRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+        .pipe(
+          catchError(() => {
+            this.setLoading(false);
+            return of({ results: [] as Product[] } as ProductsSearchResponse);
+          }),
+          tap(() => this.setLoading(false))
+        )
+    ),
+    map(response => response.results)
+  );
 
-  selectProduct(p: any){
-    this.products.push(p.item);
-    console.log(this.products);
-    
+  selectProduct(p: any) {
+
+    const product = p.item as Product;
+    if (!this.products.find(p => p.id == product.id)) {
+      this.products.push(product);
+    }
+
   }
+
+  removeProduct(prod: Product) {
+    this.products = this.products.filter(p => p.id != prod.id);
+  }
+  //#endregion
 }

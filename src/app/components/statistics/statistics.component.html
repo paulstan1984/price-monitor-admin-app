@@ -57,6 +57,14 @@
 
               <input type="text" class="form-control" (selectItem) = "selectProduct($event)"
                 [ngbTypeahead]="SearchProduct" [inputFormatter]="productFormatter" [resultFormatter]="productFormatter" [editable]='false' />
+
+              <ul class="list-group list-group-horizontal" *ngIf="products && products.length > 0">
+                <li class="list-group-item" *ngFor="let p of products">
+                  {{p.name}}
+
+                  <button (click)="removeProduct(p)" type="button" class="btn btn-outline-danger btn-sm"><i class="fas fa-trash"></i></button>
+                </li>
+              </ul>
             </div>
           </div>
 
