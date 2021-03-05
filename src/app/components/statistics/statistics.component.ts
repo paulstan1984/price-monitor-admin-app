@@ -12,6 +12,8 @@ import { AuthService } from 'src/app/services/Auth.service';
 import { ProductsService } from 'src/app/services/Products.service';
 import { StoresService } from 'src/app/services/Stores.service';
 import { LoggedInComponent } from '../LoggedInComponent';
+import { StatisticsRequest } from 'src/app/models/StatisticsRequest';
+import { StatisticsService } from 'src/app/services/Statistics.service';
 
 @Component({
   selector: 'app-statistics',
@@ -58,68 +60,72 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
   multi = [
     {
-      "name": "Germany",
+      "name": "Igienol / Profi",
       "series": [
         {
-          "name": "1990",
-          "value": 62000000
+          "name": "2021-01",
+          "value": 4
         },
         {
-          "name": "2010",
-          "value": 73000000
+          "name": "2021-02",
+          "value": 5
         },
         {
-          "name": "2011",
-          "value": 89400000
+          "name": "2021-03",
+          "value": 6
         }
       ]
     },
 
     {
-      "name": "USA",
+      "name": "Igienol / Lidl",
       "series": [
         {
-          "name": "1990",
-          "value": 250000000
+          "name": "2021-01",
+          "value": 4.2
         },
         {
-          "name": "2010",
-          "value": 309000000
+          "name": "2021-02",
+          "value": 4.1
         },
         {
-          "name": "2011",
-          "value": 311000000
+          "name": "2021-03",
+          "value": 6.7
         }
       ]
     },
 
     {
-      "name": "France",
+      "name": "Pâine / Profi",
       "series": [
         {
-          "name": "1990",
-          "value": 58000000
+          "name": "2021-01",
+          "value": 5
         },
         {
-          "name": "2010",
-          "value": 50000020
+          "name": "2021-02",
+          "value": 5
         },
         {
-          "name": "2011",
-          "value": 58000000
+          "name": "2021-03",
+          "value": 6
         }
       ]
     },
     {
-      "name": "UK",
+      "name": "Pâine / Lidl",
       "series": [
         {
-          "name": "1990",
-          "value": 57000000
+          "name": "2021-01",
+          "value": 6
         },
         {
-          "name": "2020",
-          "value": 62000000
+          "name": "2021-02",
+          "value": 5
+        },
+        {
+          "name": "2021-03",
+          "value": 6
         }
       ]
     }
@@ -130,11 +136,16 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
   hoveredDate: NgbDate | null = null;
   products: Product[] = [];
   stores: Store[] = [];
+  statisticsRequest: StatisticsRequest = {
+    ProductsIds: [] as number[],
+    StoresIds: [] as number[]
+  } as StatisticsRequest;
 
   constructor(
     authService: AuthService,
     private productsService: ProductsService,
     private storesService: StoresService,
+    private statisticsService: StatisticsService,
     router: Router,
     private calendar: NgbCalendar, public dateFormatter: NgbDateParserFormatter
   ) {
@@ -142,8 +153,13 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
     this.productsService.setAuthToken(this.authService.getToken());
     this.storesService.setAuthToken(this.authService.getToken());
+    this.statisticsService.setAuthToken(this.authService.getToken());
+
     this.fromDate = calendar.getToday();
     this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+
+    this.statisticsRequest.StartDate = new Date(this.fromDate.year, this.fromDate.month, this.fromDate.day);
+    this.statisticsRequest.EndDate = new Date(this.toDate.year, this.toDate.month, this.toDate.day);
   }
 
   ngOnInit(): void {
@@ -162,17 +178,27 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
       return;
     }
 
+    this.statisticsService.getStatistics(this.statisticsRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .subscribe(response => {
+        console.log(response);
+        this.setLoading(false);
+      });
   }
 
   //#region Date Selection
   onDateSelection(date: NgbDate) {
     if (!this.fromDate && !this.toDate) {
       this.fromDate = date;
+      this.statisticsRequest.StartDate = new Date(date.year, date.month, date.day);
     } else if (this.fromDate && !this.toDate && date && date.after(this.fromDate)) {
       this.toDate = date;
+      this.statisticsRequest.EndDate = new Date(date.year, date.month, date.day);
     } else {
       this.toDate = null;
       this.fromDate = date;
+
+      this.statisticsRequest.EndDate = undefined;
+      this.statisticsRequest.StartDate = new Date(date.year, date.month, date.day);
     }
   }
 
@@ -220,13 +246,25 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
     const product = p.item as Product;
     if (!this.products.find(p => p.id == product.id)) {
       this.products.push(product);
+      this.statisticsRequest.ProductsIds.push(product.id);
     }
 
   }
 
   removeProduct(prod: Product) {
     this.products = this.products.filter(p => p.id != prod.id);
+    this.statisticsRequest.ProductsIds = this.statisticsRequest.ProductsIds.filter(pId => pId != prod.id)
   }
   //#endregion
 
+  //#region Stores
+  toggleStore(s: any, store: Store) {
+    if(s.currentTarget.checked) {
+      this.statisticsRequest.StoresIds.push(store.id);
+    }
+    else {
+      this.statisticsRequest.StoresIds = this.statisticsRequest.StoresIds.filter(sId => sId != store.id);
+    }
+  }
+  //#endregion
 }

@@ -78,7 +78,7 @@
               <ul class="custom-list" *ngIf="stores && stores.length > 0">
                 <li class="custom-list-item" *ngFor="let s of stores">
                   <label class="ml-2 pt-0 pb-0">
-                    <input class="form-check-input me-1" type="checkbox" value="">
+                    <input class="form-check-input me-1" (change)="toggleStore($event, s)" type="checkbox" value="{{s.id}}">
                     {{s.name}}
                   </label>
                 </li>
@@ -90,6 +90,8 @@
             <button class="btn btn btn-primary" type="submit"><i class="fas fa-filter"></i> Filter</button>
 
           </div>
+
+          <pre>{{statisticsRequest | json}}</pre>
         </form>
       </div>
 
