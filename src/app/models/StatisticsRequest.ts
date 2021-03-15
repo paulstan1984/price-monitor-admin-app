@@ -6,10 +6,12 @@ export interface StatisticsRequest {
     StoresIds: number[];
 }
 
-export interface StatisticResponse {
-    Date: Date,
-    Store: string,
-    Product: string,
-    MaxPrice: number,
-    AvgPrice: number
+export interface StatisticsResponse {
+    name: string;
+    series: StatisticsValue[]
+}
+
+export interface StatisticsValue {
+    name: string;
+    value: number;
 }

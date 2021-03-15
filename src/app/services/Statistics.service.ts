@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { StatisticResponse, StatisticsRequest } from '../models/StatisticsRequest';
+import { StatisticsResponse, StatisticsRequest } from '../models/StatisticsRequest';
 import { ServiceBase } from './ServiceBase';
 
 @Injectable({
@@ -15,14 +15,14 @@ export class StatisticsService extends ServiceBase {
 
   constructor(http: HttpClient) { super (http); }
 
-  public getStatistics(request: StatisticsRequest, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<StatisticResponse[]> {
+  public getStatistics(request: StatisticsRequest, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<StatisticsResponse[]> {
 
     startCallback();
 
     return this.http
-      .post<StatisticResponse[]>(this.ApiURL, request, { headers: this.headers })
+      .post<StatisticsResponse[]>(this.ApiURL, request, { headers: this.headers })
       .pipe(
-        catchError((error: HttpErrorResponse, caught: Observable<StatisticResponse[]>) => {
+        catchError((error: HttpErrorResponse, caught: Observable<StatisticsResponse[]>) => {
           endCallback();
           errorHandler(error);
           return caught;

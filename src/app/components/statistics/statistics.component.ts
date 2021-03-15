@@ -12,7 +12,7 @@ import { AuthService } from 'src/app/services/Auth.service';
 import { ProductsService } from 'src/app/services/Products.service';
 import { StoresService } from 'src/app/services/Stores.service';
 import { LoggedInComponent } from '../LoggedInComponent';
-import { StatisticsRequest } from 'src/app/models/StatisticsRequest';
+import { StatisticsRequest, StatisticsResponse } from 'src/app/models/StatisticsRequest';
 import { StatisticsService } from 'src/app/services/Statistics.service';
 
 @Component({
@@ -58,78 +58,7 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
   yAxisLabel = 'Price';
 
 
-  multi = [
-    {
-      "name": "Igienol / Profi",
-      "series": [
-        {
-          "name": "2021-01",
-          "value": 4
-        },
-        {
-          "name": "2021-02",
-          "value": 5
-        },
-        {
-          "name": "2021-03",
-          "value": 6
-        }
-      ]
-    },
-
-    {
-      "name": "Igienol / Lidl",
-      "series": [
-        {
-          "name": "2021-01",
-          "value": 4.2
-        },
-        {
-          "name": "2021-02",
-          "value": 4.1
-        },
-        {
-          "name": "2021-03",
-          "value": 6.7
-        }
-      ]
-    },
-
-    {
-      "name": "Pâine / Profi",
-      "series": [
-        {
-          "name": "2021-01",
-          "value": 5
-        },
-        {
-          "name": "2021-02",
-          "value": 5
-        },
-        {
-          "name": "2021-03",
-          "value": 6
-        }
-      ]
-    },
-    {
-      "name": "Pâine / Lidl",
-      "series": [
-        {
-          "name": "2021-01",
-          "value": 6
-        },
-        {
-          "name": "2021-02",
-          "value": 5
-        },
-        {
-          "name": "2021-03",
-          "value": 6
-        }
-      ]
-    }
-  ];
+  multi: StatisticsResponse[] | undefined;
 
   fromDate: NgbDate | null;
   toDate: NgbDate | null;
@@ -182,6 +111,7 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
       .subscribe(response => {
         console.log(response);
         this.setLoading(false);
+        this.multi = response;
       });
   }
 
