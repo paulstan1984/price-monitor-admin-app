@@ -3,13 +3,16 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
+import { ServiceBase } from './ServiceBase';
 
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService extends ServiceBase {
 
-  constructor(private http: HttpClient) { }
+  constructor(http: HttpClient) { 
+    super(http);
+  }
 
   isLoggedIn(cbkNotLogedIn: () => void) {
     let token = localStorage.getItem(environment.PriceMonitorToken);
@@ -19,16 +22,25 @@ export class AuthService {
     }
   }
 
-  logout() {
-    localStorage.removeItem(environment.PriceMonitorToken);
+  logout() : Observable<any> {
+
+    super.setAuthToken(this.getToken());
+
+    return this.http
+      .post(environment.ApiURL + 'logout', { }, { headers: this.headers })
+      .pipe(
+        catchError((error: HttpErrorResponse, caught: Observable<any>) => {
+          throw error;
+        })
+    );
   }
 
-  login(password: string, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<LoginResponse> {
+  login(username: string, password: string, startCallback: () => void, endCallback: () => void, errorHandler: (error: HttpErrorResponse) => void): Observable<LoginResponse> {
 
     startCallback();
 
     return this.http
-      .post(environment.ApiURL + 'login', { Password: password })
+      .post(environment.ApiURL + 'login', { Username: username, Password: password })
       .pipe(
         catchError((error: HttpErrorResponse, caught: Observable<any>) => {
           endCallback();

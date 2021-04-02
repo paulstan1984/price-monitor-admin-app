@@ -8,6 +8,12 @@
     </div>
 
 
+
+    <div *ngIf="errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['Username']" class="alert alert-danger">
+      {{errorObj.DetailedMessages['Username']}}
+    </div>
+    <input name="username" type="text" class="form-control" placeholder="Username" required [(ngModel)]="username">
+
     <div *ngIf="errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['Password']" class="alert alert-danger">
       {{errorObj.DetailedMessages['Password']}}
     </div>

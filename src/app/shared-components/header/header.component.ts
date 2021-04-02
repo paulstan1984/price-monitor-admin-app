@@ -18,8 +18,12 @@ export class HeaderComponent {
 
 
   DoLogout() {
-    this.authService.logout();
-    this.router.navigate([environment.LoginRoute])
+    this.authService
+      .logout()
+      .subscribe(_ => {
+        localStorage.removeItem(environment.PriceMonitorToken);
+        this.router.navigate([environment.LoginRoute])
+      });
   }
 
   private menuExpanded = false;

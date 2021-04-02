@@ -14,6 +14,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
 
   year: number = 0;
   password: string = '';
+  username: string = '';
 
   constructor(
     private authService: AuthService,
@@ -31,7 +32,7 @@ export class LoginComponent extends BaseComponent implements OnInit {
     }
 
     this.authService
-      .login(this.password, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
+      .login(this.username, this.password, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(response => {
         this.setLoading(false);
         this.authService.setToken(response.token);
