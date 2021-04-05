@@ -14,6 +14,7 @@ import { StoresService } from 'src/app/services/Stores.service';
 import { LoggedInComponent } from '../LoggedInComponent';
 import { StatisticsRequest, StatisticsResponse } from 'src/app/models/StatisticsRequest';
 import { StatisticsService } from 'src/app/services/Statistics.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-statistics',
@@ -60,8 +61,6 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
   multi: StatisticsResponse[] | undefined;
 
-  fromDate: NgbDate | null;
-  toDate: NgbDate | null;
   hoveredDate: NgbDate | null = null;
   products: Product[] = [];
   stores: Store[] = [];
@@ -76,7 +75,8 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
     private storesService: StoresService,
     private statisticsService: StatisticsService,
     router: Router,
-    private calendar: NgbCalendar, public dateFormatter: NgbDateParserFormatter
+    private calendar: NgbCalendar, 
+    private dateFormatter: DatePipe
   ) {
     super(authService, router);
 
@@ -84,11 +84,10 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
     this.storesService.setAuthToken(this.authService.getToken());
     this.statisticsService.setAuthToken(this.authService.getToken());
 
-    this.fromDate = calendar.getToday();
-    this.toDate = calendar.getNext(calendar.getToday(), 'd', 10);
+    let today = calendar.getToday();
 
-    this.statisticsRequest.StartDate = new Date(this.fromDate.year, this.fromDate.month, this.fromDate.day);
-    this.statisticsRequest.EndDate = new Date(this.toDate.year, this.toDate.month, this.toDate.day);
+    this.statisticsRequest.StartDate = this.dateFormatter.transform(new Date(today.year, 0, 1), 'Y-MM-dd');
+    this.statisticsRequest.EndDate = this.dateFormatter.transform(new Date(today.year, today.month-1, today.day), 'Y-MM-dd');
   }
 
   ngOnInit(): void {

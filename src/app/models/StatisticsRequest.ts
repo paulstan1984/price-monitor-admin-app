@@ -1,7 +1,7 @@
 
 export interface StatisticsRequest {
-    StartDate: Date | undefined;
-    EndDate: Date | undefined;
+    StartDate: Date | string | undefined | null;
+    EndDate: Date | string | undefined | null;
 	ProductsIds: number[];
     StoresIds: number[];
 }
