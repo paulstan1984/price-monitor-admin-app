@@ -12,6 +12,6 @@ export interface StatisticsResponse {
 }
 
 export interface StatisticsValue {
-    name: string;
+    name: Date;
     value: number;
 }

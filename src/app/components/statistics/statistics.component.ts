@@ -108,8 +108,10 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
     this.statisticsService.getStatistics(this.statisticsRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(response => {
-        console.log(response);
         this.setLoading(false);
+        response.forEach(r => {
+          r.series.forEach(s => s.name = new Date(s.name));
+        })
         this.multi = response;
       });
   }
