@@ -66,7 +66,8 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
   stores: Store[] = [];
   statisticsRequest: StatisticsRequest = {
     ProductsIds: [] as number[],
-    StoresIds: [] as number[]
+    StoresIds: [] as number[],
+    GrouppingType: 'day'
   } as StatisticsRequest;
 
   constructor(
@@ -88,6 +89,7 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
     this.statisticsRequest.StartDate = this.dateFormatter.transform(new Date(today.year, 0, 1), 'Y-MM-dd');
     this.statisticsRequest.EndDate = this.dateFormatter.transform(new Date(today.year, today.month-1, today.day), 'Y-MM-dd');
+    this.statisticsRequest.GrouppingType = 'day';
   }
 
   ngOnInit(): void {
@@ -96,6 +98,7 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
     this.storesService
       .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(response => {
+        console.log(this.stores);
         this.stores = response;
         this.setLoading(false);
       });
@@ -108,10 +111,12 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
     this.statisticsService.getStatistics(this.statisticsRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(response => {
+        if(this.statisticsRequest.GrouppingType != 'none') {
+          response.forEach(r => {
+            r.series.forEach(s => s.name = new Date(s.name));
+          })
+        }
         this.setLoading(false);
-        response.forEach(r => {
-          r.series.forEach(s => s.name = new Date(s.name));
-        })
         this.multi = response;
       });
   }

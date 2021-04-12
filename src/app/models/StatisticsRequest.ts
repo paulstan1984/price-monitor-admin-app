@@ -4,6 +4,7 @@ export interface StatisticsRequest {
     EndDate: Date | string | undefined | null;
 	ProductsIds: number[];
     StoresIds: number[];
+    GrouppingType: string;
 }
 
 export interface StatisticsResponse {

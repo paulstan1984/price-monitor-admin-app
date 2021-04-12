@@ -17,15 +17,27 @@
               <h2>Date Range</h2>
               <div class="form-group">
                 <div class="input-group">
-                  <input class="form-control" placeholder="yyyy-mm-dd" name="StartDate" [(ngModel)]="statisticsRequest.StartDate">
+                  <input class="form-control" placeholder="yyyy-mm-dd" name="StartDate"
+                    [(ngModel)]="statisticsRequest.StartDate">
                 </div>
               </div>
               <div class="form-group">
                 <div class="input-group">
-                  <input class="form-control" placeholder="yyyy-mm-dd" name="EndDate" [(ngModel)]="statisticsRequest.EndDate">
+                  <input class="form-control" placeholder="yyyy-mm-dd" name="EndDate"
+                    [(ngModel)]="statisticsRequest.EndDate">
                 </div>
               </div>
 
+              <h2>Groupping Type</h2>
+              <div class="form-group">
+                <div class="input-group">
+                  <select class="form-control" [(ngModel)]="statisticsRequest.GrouppingType" name="GrouppingType">
+                    <option value="day" selected>Daily</option>
+                    <option value="month">Monthly</option>
+                    <option value="none">Total</option>
+                  </select>
+                </div>
+              </div>
             </div>
 
             <div class="col-md-6 col-lg-5">
@@ -35,13 +47,13 @@
                 [ngbTypeahead]="SearchProduct" [inputFormatter]="productFormatter" [resultFormatter]="productFormatter"
                 [editable]='false' />
 
-              <hr *ngIf="products && products.length > 0"/>
+              <hr *ngIf="products && products.length > 0" />
 
               <ul class="custom-list" *ngIf="products && products.length > 0">
                 <li class="custom-list-item" *ngFor="let p of products">
                   <button (click)="removeProduct(p)" type="button" class="btn btn-outline-danger btn-sm"><i
-                    class="fas fa-trash"></i></button>
-                  
+                      class="fas fa-trash"></i></button>
+
                   {{p.name}}
                 </li>
               </ul>
@@ -53,7 +65,8 @@
               <ul class="custom-list" *ngIf="stores && stores.length > 0">
                 <li class="custom-list-item" *ngFor="let s of stores">
                   <label class="ml-2 pt-0 pb-0">
-                    <input class="form-check-input me-1" (change)="toggleStore($event, s)" type="checkbox" value="{{s.id}}">
+                    <input class="form-check-input me-1" (change)="toggleStore($event, s)" type="checkbox"
+                      value="{{s.id}}">
                     {{s.name}}
                   </label>
                 </li>
@@ -76,10 +89,16 @@
 
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
 
-        <ngx-charts-line-chart [results]="multi" [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis"
-          [legend]="showLegend" [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel"
-          [xAxisLabel]="xAxisLabel" [yAxisLabel]="yAxisLabel" [timeline]="true">
+        <ngx-charts-line-chart *ngIf="statisticsRequest && statisticsRequest.GrouppingType != 'none'" 
+          [results]="multi"
+          [gradient]="gradient" [xAxis]="showXAxis" [yAxis]="showYAxis" [legend]="showLegend"
+          [showXAxisLabel]="showXAxisLabel" [showYAxisLabel]="showYAxisLabel" [xAxisLabel]="xAxisLabel"
+          [yAxisLabel]="yAxisLabel" [timeline]="true">
         </ngx-charts-line-chart>
+
+        <ngx-charts-pie-chart *ngIf="multi && statisticsRequest && statisticsRequest.GrouppingType == 'none'" 
+          [results]="multi[0].series" [legend]="showLegend">
+        </ngx-charts-pie-chart>
       </div>
 
     </main>
