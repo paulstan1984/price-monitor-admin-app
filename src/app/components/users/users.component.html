@@ -6,13 +6,13 @@
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
 
-      <!--Products-->
+      <!--Users-->
 
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3">
-        <h2>Products</h2>
+        <h2>Users</h2>
         <div class="btn-toolbar mb-2 mb-md-0">
           <div class="btn-group mr-2">
-            <button class="btn btn-sm btn-primary" (click)="NewProduct()"><i class="fa fa-plus" aria-hidden="true"></i>
+            <button class="btn btn-sm btn-primary" (click)="NewUser()"><i class="fa fa-plus" aria-hidden="true"></i>
               New</button>
           </div>
         </div>
@@ -23,10 +23,6 @@
           <div class="row mb-3">
             <div class="col-md-6 col-lg-3">
               <input type="text" class="form-control" placeholder="Name" name="name" [(ngModel)]="searchRequest.name">
-            </div>
-            <div class="col-md-6 col-lg-3">
-              <input type="text" class="form-control" placeholder="Category" name="category"
-                [(ngModel)]="searchRequest.category">
             </div>
           </div>
 
@@ -67,17 +63,17 @@
                 </a>
               </th>
               <th>
-                <a (click)="OrderBy('category_id.categories.name')" class="hand">
-                  Category
-                  <i *ngIf="searchRequest?.order_by == 'category_id.categories.name' && searchRequest?.order_by_dir == 'DESC'"
+                <a (click)="OrderBy('username')" class="hand">
+                  Username
+                  <i *ngIf="searchRequest?.order_by == 'username' && searchRequest?.order_by_dir == 'DESC'"
                     class="fas fa-sort-amount-down"></i>
-                  <i *ngIf="searchRequest?.order_by == 'category_id.categories.name' && searchRequest?.order_by_dir == 'ASC'"
+                  <i *ngIf="searchRequest?.order_by == 'username' && searchRequest?.order_by_dir == 'ASC'"
                     class="fas fa-sort-amount-up"></i>
                 </a>
               </th>
-              <th class="d-none d-sm-none d-md-table-cell">Stores</th>
-              <th class="d-none d-sm-none d-md-table-cell" align="right">Last Price</th>
-              <th class="d-none d-sm-none d-md-table-cell" align="right">Avg Price</th>
+              <th>
+                Password
+              </th>
               <th class="d-none d-sm-none d-md-table-cell">
                 <a (click)="OrderBy('created_at')" class="hand">
                   Created
@@ -100,52 +96,61 @@
             </tr>
           </thead>
           <tbody *ngIf="searchResponse && searchResponse?.results!.length > 0">
-            <tr *ngFor="let product of searchResponse?.results">
-              <td class="d-none d-sm-none d-md-table-cell">{{product.id}}</td>
+            <tr *ngFor="let user of searchResponse?.results">
+              <td class="d-none d-sm-none d-md-table-cell">{{user.id}}</td>
               <td>
-                <ng-container *ngIf="!product.InEdit">
-                  {{product.name}}
+                <ng-container *ngIf="!user.InEdit">
+                  {{user.name}}
                 </ng-container>
 
-                <input class="form-control" *ngIf="product.InEdit" name="name" [(ngModel)]="product.name"
-                  (keyup.enter)="SaveProduct(product)" (keyup.escape)="EditProduct(product, false)" />
+                <input class="form-control" *ngIf="user.InEdit" name="name" [(ngModel)]="user.name"
+                  (keyup.enter)="SaveUser(user)" (keyup.escape)="EditUser(user, false)" />
 
                 <div
-                  *ngIf="product.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
+                  *ngIf="user.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['name']"
                   class="alert alert-danger m-0 p-2">
                   {{errorObj.DetailedMessages['name']}}
                 </div>
               </td>
               <td>
-                <ng-container *ngIf="!product.InEdit">
-                  {{product.category?.name}}
+                <ng-container *ngIf="!user.InEdit">
+                  {{user.username}}
                 </ng-container>
 
-                <select class="form-control" *ngIf="product.InEdit" name="category_id" [(ngModel)]="product.category_id"
-                  (keyup.enter)="SaveProduct(product)" (keyup.escape)="EditProduct(product, false)">
-                  <option *ngFor="let categ of categories" [value]="categ.id">{{categ.name}}</option>
-                </select>
+                <input class="form-control" *ngIf="user.InEdit" name="username" [(ngModel)]="user.username"
+                  (keyup.enter)="SaveUser(user)" (keyup.escape)="EditUser(user, false)" />
 
                 <div
-                  *ngIf="product.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['category_id']"
+                  *ngIf="user.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['username']"
                   class="alert alert-danger m-0 p-2">
-                  {{errorObj.DetailedMessages['category_id']}}
+                  {{errorObj.DetailedMessages['username']}}
                 </div>
               </td>
-              <td class="d-none d-sm-none d-md-table-cell">{{product.stores}} </td>
-              <td class="d-none d-sm-none d-md-table-cell" align="right">{{product.lastPrice}} </td>
-              <td class="d-none d-sm-none d-md-table-cell" align="right">{{product.avgPrice}} </td>
-              <td class="d-none d-sm-none d-md-table-cell">{{product.created_at | date : dateTimeFormal}} </td>
-              <td class="d-none d-sm-none d-md-table-cell">{{product.updated_at | date : dateTimeFormal}}</td>
+              <td>
+                <ng-container *ngIf="!user.InEdit">
+                  ***
+                </ng-container>
+
+                <input type="password" class="form-control" *ngIf="user.InEdit" name="Password" [(ngModel)]="user.password"
+                  (keyup.enter)="SaveUser(user)" (keyup.escape)="EditUser(user, false)" />
+
+                <div
+                  *ngIf="user.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['password']"
+                  class="alert alert-danger m-0 p-2">
+                  {{errorObj.DetailedMessages['password']}}
+                </div>
+              </td>
+              <td class="d-none d-sm-none d-md-table-cell">{{user.created_at | date : dateTimeFormal}} </td>
+              <td class="d-none d-sm-none d-md-table-cell">{{user.updated_at | date : dateTimeFormal}}</td>
               <td nowrap>
-                <button type="button" *ngIf="!product.InEdit" class="mr-2 btn btn-sm btn-secondary"
-                  (click)="EditProduct(product, true)"><i class="fas fa-edit"></i></button>
-                <button type="button" *ngIf="product.InEdit" class="mr-2 btn btn-sm btn-success"
-                  (click)="SaveProduct(product)"><i class="fas fa-save"></i></button>
-                <button type="button" *ngIf="product.InEdit" class="mr-2 btn btn-sm btn-info"
-                  (click)="EditProduct(product, false)"><i class="fas fa-undo"></i></button>
-                <button type="button" *ngIf="!product.InEdit" class="mr-2 btn btn-sm btn-danger"
-                  (click)="DeleteProduct(product)"><i class="fas fa-trash-alt"></i></button>
+                <button type="button" *ngIf="!user.InEdit" class="mr-2 btn btn-sm btn-secondary"
+                  (click)="EditUser(user, true)"><i class="fas fa-edit"></i></button>
+                <button type="button" *ngIf="user.InEdit" class="mr-2 btn btn-sm btn-success"
+                  (click)="SaveUser(user)"><i class="fas fa-save"></i></button>
+                <button type="button" *ngIf="user.InEdit" class="mr-2 btn btn-sm btn-info"
+                  (click)="EditUser(user, false)"><i class="fas fa-undo"></i></button>
+                <button type="button" *ngIf="!user.InEdit" class="mr-2 btn btn-sm btn-danger"
+                  (click)="DeleteUser(user)"><i class="fas fa-trash-alt"></i></button>
               </td>
             </tr>
           </tbody>

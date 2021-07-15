@@ -6,6 +6,7 @@ import { LoginComponent } from './components/login/login.component';
 import { PricesComponent } from './components/prices/prices.component';
 import { ProductsComponent } from './components/products/products.component';
 import { StatisticsComponent } from './components/statistics/statistics.component';
+import { UsersComponent } from './components/users/users.component';
 
 const routes: Routes = [
 
@@ -16,6 +17,7 @@ const routes: Routes = [
   { path: environment.ProductsRoute, component: ProductsComponent },
   { path: environment.PricesdRoute, component: PricesComponent },
   { path: environment.StatisticsRoute, component: StatisticsComponent },
+  { path: environment.UsersRoute, component: UsersComponent },
   
 ];
 

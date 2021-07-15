@@ -8,5 +8,6 @@ export const base_environment = {
     LoginRoute: 'login',
     ProductsRoute: 'products',
     PricesdRoute: 'prices',
-    StatisticsRoute: 'statistics'
+    StatisticsRoute: 'statistics',
+    UsersRoute: 'users'
 };
