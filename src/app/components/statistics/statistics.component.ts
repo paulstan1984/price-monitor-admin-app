@@ -63,7 +63,6 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
   hoveredDate: NgbDate | null = null;
   products: Product[] = [];
-  stores: Store[] = [];
   statisticsRequest: StatisticsRequest = {
     ProductsIds: [] as number[],
     StoresIds: [] as number[],
@@ -73,35 +72,21 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
   constructor(
     authService: AuthService,
     private productsService: ProductsService,
-    private storesService: StoresService,
     private statisticsService: StatisticsService,
     router: Router,
-    private calendar: NgbCalendar, 
+    private calendar: NgbCalendar,
     private dateFormatter: DatePipe
   ) {
     super(authService, router);
 
     this.productsService.setAuthToken(this.authService.getToken());
-    this.storesService.setAuthToken(this.authService.getToken());
     this.statisticsService.setAuthToken(this.authService.getToken());
 
     let today = calendar.getToday();
 
-    this.statisticsRequest.StartDate = this.dateFormatter.transform(new Date(today.year, 0, 1), 'Y-MM-dd');
-    this.statisticsRequest.EndDate = this.dateFormatter.transform(new Date(today.year, today.month-1, today.day), 'Y-MM-dd');
+    this.statisticsRequest.StartDate = this.dateFormatter.transform(new Date(today.year + 1, 0, 1), 'Y-MM-dd');
+    this.statisticsRequest.EndDate = this.dateFormatter.transform(new Date(today.year, today.month - 1, today.day), 'Y-MM-dd');
     this.statisticsRequest.GrouppingType = 'day';
-  }
-
-  ngOnInit(): void {
-    super.ngOnInit();
-
-    this.storesService
-      .list(() => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
-      .subscribe(response => {
-        console.log(this.stores);
-        this.stores = response;
-        this.setLoading(false);
-      });
   }
 
   DoFilter(f: NgForm) {
@@ -111,7 +96,7 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
     this.statisticsService.getStatistics(this.statisticsRequest, () => this.setLoading(true), () => this.setLoading(false), error => this.errorHandler(error))
       .subscribe(response => {
-        if(this.statisticsRequest.GrouppingType != 'none') {
+        if (this.statisticsRequest.GrouppingType != 'none') {
           response.forEach(r => {
             r.series.forEach(s => s.name = new Date(s.name));
           })
@@ -160,7 +145,7 @@ export class StatisticsComponent extends LoggedInComponent implements OnInit {
 
   //#region Stores
   toggleStore(s: any, store: Store) {
-    if(s.currentTarget.checked) {
+    if (s.currentTarget.checked) {
       this.statisticsRequest.StoresIds.push(store.id);
     }
     else {
