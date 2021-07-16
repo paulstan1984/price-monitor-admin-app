@@ -22,9 +22,6 @@
         <form class="col-12" action="#" method="post" role="form" #f="ngForm" (ngSubmit)="DoFilter(f)">
           <div class="row mb-3">
             <div class="col-md-6 col-lg-3">
-              <input type="text" class="form-control" placeholder="Store" name="store" [(ngModel)]="searchRequest.store">
-            </div>
-            <div class="col-md-6 col-lg-3">
               <input type="text" class="form-control" placeholder="Product" name="product" [(ngModel)]="searchRequest.product">
             </div>
           </div>
@@ -58,13 +55,6 @@
                 Product 
                   <i *ngIf="searchRequest?.order_by == 'product_id.products.name' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
                   <i *ngIf="searchRequest?.order_by == 'product_id.products.name' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
-                </a>
-              </th>
-              <th>
-                <a (click)="OrderBy('store_id.stores.name')" class="hand">
-                Store 
-                  <i *ngIf="searchRequest?.order_by == 'store_id.stores.name' && searchRequest?.order_by_dir == 'DESC'" class="fas fa-sort-amount-down"></i> 
-                  <i *ngIf="searchRequest?.order_by == 'store_id.stores.name' && searchRequest?.order_by_dir == 'ASC'" class="fas fa-sort-amount-up"></i>
                 </a>
               </th>
               <th>
@@ -108,22 +98,6 @@
                   *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['product_id']"
                   class="alert alert-danger m-0 p-2">
                   {{errorObj.DetailedMessages['product_id']}}
-                </div>
-              </td>
-              <td>
-                <ng-container *ngIf="!price.InEdit">
-                  {{price.store?.name}}
-                </ng-container>
-
-                <select class="form-control" *ngIf="price.InEdit" name="store_id" [(ngModel)]="price.store_id"
-                  (keyup.enter)="SavePrice(price)" (keyup.escape)="EditPrice(price, false)">
-                  <option *ngFor="let store of stores" [value]="store.id">{{store.name}}</option>
-                </select>
-
-                <div
-                  *ngIf="price.InEdit && errorObj && errorObj.DetailedMessages && errorObj.DetailedMessages['store_id']"
-                  class="alert alert-danger m-0 p-2">
-                  {{errorObj.DetailedMessages['store_id']}}
                 </div>
               </td>
               <td>

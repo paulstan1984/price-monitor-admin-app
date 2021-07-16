@@ -75,9 +75,8 @@
                     class="fas fa-sort-amount-up"></i>
                 </a>
               </th>
-              <th class="d-none d-sm-none d-md-table-cell">Stores</th>
-              <th class="d-none d-sm-none d-md-table-cell" align="right">Last Price</th>
-              <th class="d-none d-sm-none d-md-table-cell" align="right">Avg Price</th>
+              <th class="d-none d-sm-none d-md-table-cell text-right">Last Price</th>
+              <th class="d-none d-sm-none d-md-table-cell text-right">Avg Price</th>
               <th class="d-none d-sm-none d-md-table-cell">
                 <a (click)="OrderBy('created_at')" class="hand">
                   Created
@@ -132,7 +131,6 @@
                   {{errorObj.DetailedMessages['category_id']}}
                 </div>
               </td>
-              <td class="d-none d-sm-none d-md-table-cell">{{product.stores}} </td>
               <td class="d-none d-sm-none d-md-table-cell" align="right">{{product.lastPrice}} </td>
               <td class="d-none d-sm-none d-md-table-cell" align="right">{{product.avgPrice}} </td>
               <td class="d-none d-sm-none d-md-table-cell">{{product.created_at | date : dateTimeFormal}} </td>

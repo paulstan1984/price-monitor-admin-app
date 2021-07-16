@@ -27,17 +27,6 @@
                     [(ngModel)]="statisticsRequest.EndDate">
                 </div>
               </div>
-
-              <h2>Groupping Type</h2>
-              <div class="form-group">
-                <div class="input-group">
-                  <select class="form-control" [(ngModel)]="statisticsRequest.GrouppingType" name="GrouppingType">
-                    <option value="day" selected>Daily</option>
-                    <option value="month">Monthly</option>
-                    <option value="none">Total</option>
-                  </select>
-                </div>
-              </div>
             </div>
 
             <div class="col-md-6 col-lg-5">
@@ -59,18 +48,17 @@
               </ul>
             </div>
 
-            <div class="col-md-6 col-lg-4">
-              <h2>Stores</h2>
-
-              <ul class="custom-list" *ngIf="stores && stores.length > 0">
-                <li class="custom-list-item" *ngFor="let s of stores">
-                  <label class="ml-2 pt-0 pb-0">
-                    <input class="form-check-input me-1" (change)="toggleStore($event, s)" type="checkbox"
-                      value="{{s.id}}">
-                    {{s.name}}
-                  </label>
-                </li>
-              </ul>
+            <div class="col-md-6 col-lg-3">
+              <h2>Groupping Type</h2>
+              <div class="form-group">
+                <div class="input-group">
+                  <select class="form-control" [(ngModel)]="statisticsRequest.GrouppingType" name="GrouppingType">
+                    <option value="day" selected>Daily</option>
+                    <option value="month">Monthly</option>
+                    <option value="none">Total</option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
 
